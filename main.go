@@ -8,16 +8,18 @@ import (
 )
 
 func main() {
+	DbConnect()
 
-	request, err := http.Get("https://line06w.bkfon-resources.com/events/list?lang=ru&version=7987900598&scopeMarket=1600")
+	var fonbet *Fonbet
+	request, err := http.Get("https://line55w.bkfon-resources.com/line/desktop/topEvents3?place=live&sysId=1&lang=ru")
 	if err != nil {
 		fmt.Printf("Error: ", err)
 	}
 
 	body, err := io.ReadAll(request.Body)
 
-	json.Unmarshal(body)
+	json.Unmarshal(body, &fonbet)
 	request.Body.Close()
-	fmt.Println(string(body))
+	//fmt.Printf("%+v", fonbet)
 
 }
