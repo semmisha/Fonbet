@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-func Parse2() *Fonbet2 {
-	var fonbet *Fonbet2
-	request, err := http.Get("https://line06w.bkfon-resources.com/events/list?lang=ru&version=7987900598&scopeMarket=1600")
+func Parse[T any](fonbet *T, url string) {
+
+	request, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("Error: ", err)
 	}
@@ -27,5 +27,5 @@ func Parse2() *Fonbet2 {
 	if err != nil {
 		fmt.Println(err)
 	}
-	return fonbet
+
 }

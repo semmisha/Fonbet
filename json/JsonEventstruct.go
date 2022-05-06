@@ -1,10 +1,6 @@
-package main
+package json
 
-func init() {
-
-}
-
-type Fonbet2 struct {
+type FonbetEvents struct {
 	PacketVersion               int64 `json:"packetVersion"`
 	FromVersion                 int   `json:"fromVersion"`
 	CatalogTablesVersion        int   `json:"catalogTablesVersion"`
