@@ -4,20 +4,18 @@ import (
 	fonstruct "Fonbet/json"
 	"database/sql"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"log"
-	"strconv"
 	"strings"
-	"time"
 )
 
 //
 
-func Result(fonbet *fonstruct.FonbetResult, db *sql.DB) (err error) {
-	var sum int
+func Result(fonbet *fonstruct.FonbetResult, db *sql.DB, logger *logrus.Logger) (err error) {
+	var sum, count int = 0, 0
 
-	var i int = 0
-	for i < len(fonbet.Events) {
-		exist, err := db.Query(`SELECT coalesce((sum(CASE WHEN $1 IN ("stringname") AND $2 IN ("starttime") THEN 1 ELSE 0 END)),0) FROM results ;`, fonbet.Events[i].Name, fonbet.Events[i].StartTime)
+	for i := 0; i < len(fonbet.Events); i++ {
+		exist, err := db.Query(`SELECT coalesce((sum(CASE WHEN $1 IN ("stringname") and $2 in ("starttime")THEN 1 ELSE 0 END)),0) FROM results ;`, fonbet.Events[i].Name, fonbet.Events[i].StartTime)
 		if err != nil {
 			log.Println(err)
 		}
@@ -29,18 +27,18 @@ func Result(fonbet *fonstruct.FonbetResult, db *sql.DB) (err error) {
 			//fmt.Println(sum)
 		}
 
-		if sum == 0 && strings.Contains(fonbet.Events[i].Name, "-") {
+		if sum == 0 && strings.Contains(fonbet.Events[i].Name, "-") || sum == 0 && strings.Contains(fonbet.Events[i].Name, "–") {
 
-			fontime, err := time.Parse(time.RFC3339, strconv.Itoa(fonbet.Events[i].StartTime))
-			fmt.Printf("Name: %v StartTime: %v  Result: %v \n", fonbet.Events[i].Name, fontime, fonbet.Events[i].Score)
 			_, err = db.Exec("INSERT INTO results (stringname, starttime, score) VALUES ($1, $2, $3)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score)
+			j := &count
+			*j++
 			if err != nil {
 				fmt.Println(err)
 			}
 
 		}
-		i++
+
 	}
-	fmt.Printf("Total Result rows: %v\n ", i)
+	logger.Infof("Total Result rows: %v", count)
 	return
 }

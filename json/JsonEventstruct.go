@@ -32,7 +32,7 @@ type FonbetEvents struct {
 		Team1          string `json:"team1"`
 		Team2          string `json:"team2"`
 		Name           string `json:"name"`
-		StartTime      int    `json:"startTime"`
+		StartTime      int64  `json:"startTime"`
 		Place          string `json:"place"`
 		StatisticsType string `json:"statisticsType"`
 		Priority       int    `json:"priority"`

@@ -9,7 +9,7 @@ type FonbetResult struct {
 		Id        string `json:"id"`
 		Name      string `json:"name"`
 		Score     string `json:"score"`
-		StartTime int    `json:"startTime"`
+		StartTime int64  `json:"startTime"`
 		Status    int    `json:"status"`
 	} `json:"events"`
 	Sports []struct {
