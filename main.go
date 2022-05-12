@@ -1,11 +1,11 @@
 package main
 
 import (
-	logging "Fonbet/Logging"
 	"Fonbet/api"
 	"Fonbet/db/postgresql"
 	"Fonbet/db/postgresql/connect"
 	fonstruct "Fonbet/json"
+	logging "Fonbet/logging"
 	"Fonbet/utils"
 	"fmt"
 	"time"
@@ -26,25 +26,16 @@ func main() {
 	urlresult := "https://clientsapi03w.bkfon-resources.com/results/results.json.php?locale=ru"
 
 	for {
+
 		db := connect.DbConnect2(logger)
 		api.Parse(&events, urlevents, logger)
 		err := Postgres.Sport(events, db, logger)
 		if err != nil {
 			fmt.Println(err)
-
 		}
-		err = Postgres.Events(events, db, logger)
-		if err != nil {
-			fmt.Println(err)
+		Postgres.Events(events, db, logger)
 
-		}
-		err = Postgres.Factor(events, db, logger)
-		if err != nil {
-			fmt.Println(err)
-
-		}
-		for i := 0; i <= 5; i++ {
-
+		for i := 0; i <= 1; i++ {
 			api.Parse(&result, utils.DayCount(urlresult, i), logger)
 			//test := Postgres.Connect(&dbConf)
 			//fmt.Printf(":%v", test)
@@ -56,12 +47,16 @@ func main() {
 			Postgres.CompareResult(result, db, logger)
 
 		}
+
+		Postgres.CompareFactor(events, db, logger)
+
 		err = db.Close()
 		if err != nil {
 			fmt.Println(err)
 
 		}
-		time.Sleep(5 * time.Minute)
+
+		time.Sleep(15 * time.Minute)
 
 	}
 }

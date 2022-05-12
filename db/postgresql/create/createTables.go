@@ -6,7 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func CreateDBStructure(db *pgxpool.Pool, logger *logrus.Logger) {
+func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) {
 
 	//Check if Db structure is created
 	sportid, err := db.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS sports (sportid INT PRIMARY KEY not null, parentid int, name VARCHAR(150))")

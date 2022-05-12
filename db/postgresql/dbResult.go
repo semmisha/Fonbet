@@ -12,7 +12,7 @@ import (
 //
 
 func Result(fonbet *fonstruct.FonbetResult, db *sql.DB, logger *logrus.Logger) (err error) {
-	var sum, count int = 0, 0
+	var sum, count = 0, 0
 
 	for i := 0; i < len(fonbet.Events); i++ {
 		exist, err := db.Query(`SELECT coalesce((sum(CASE WHEN $1 IN ("stringname") and $2 in ("starttime")THEN 1 ELSE 0 END)),0) FROM results ;`, fonbet.Events[i].Name, fonbet.Events[i].StartTime)
@@ -28,14 +28,21 @@ func Result(fonbet *fonstruct.FonbetResult, db *sql.DB, logger *logrus.Logger) (
 		}
 
 		if sum == 0 && strings.Contains(fonbet.Events[i].Name, "-") || sum == 0 && strings.Contains(fonbet.Events[i].Name, "–") {
+			strarray := strings.Split(fonbet.Events[i].Score, " ")
+			resultarray := strings.Split(strarray[0], ":")
+			if len(resultarray) >= 2 {
 
-			_, err = db.Exec("INSERT INTO results (stringname, starttime, score) VALUES ($1, $2, $3)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score)
-			j := &count
-			*j++
-			if err != nil {
-				fmt.Println(err)
+				_, err = db.Exec("INSERT INTO results (stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, resultarray[0], resultarray[1])
+				j := &count
+				*j++
+				if err != nil {
+					fmt.Println(err)
+				}
+			} else {
+				logger.Errorf("result array <2 symbols, panic. err:%v", err)
+				return err
+
 			}
-
 		}
 
 	}

@@ -18,6 +18,6 @@ func Logger() (logger *logrus.Logger) {
 		CallerPrettyfier: nil,
 		PrettyPrint:      false,
 	})
-	logger.Out = (os.Stdout)
+	logger.Out = os.Stdout
 	return
 }

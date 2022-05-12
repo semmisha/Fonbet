@@ -24,12 +24,12 @@ func CompareResult(result *fonstruct.FonbetResult, db *sql.DB, logger *logrus.Lo
 			fmt.Println(err)
 		}
 
-		fmt.Println(tempstruct)
+		//	fmt.Println(tempstruct)
 		*b = append(*b, tempstruct)
 
 	}
 
-	var count int = 0
+	var count = 0
 	for _, i := range tempslice {
 
 		for j := 0; j < len(result.Events); j++ {
@@ -54,6 +54,44 @@ func CompareResult(result *fonstruct.FonbetResult, db *sql.DB, logger *logrus.Lo
 	logger.Infof("New copmare entries: %v", count)
 }
 
-func CompareFactor(db *sql.DB) {
+func CompareFactor(event *fonstruct.FonbetEvents, db *sql.DB, logger *logrus.Logger) {
+	type temp struct {
+		id     int
+		factor int
+		bet    float32
+	}
+	query, _ := db.Query("Select eventid, factor,bet from factors where factor_bool = false")
+	var tempslice []temp
+	for query.Next() {
+		var tempstruct temp
+		b := &tempslice
+		if err := query.Scan(&tempstruct.id, &tempstruct.factor, &tempstruct.bet); err != nil {
+			fmt.Println(err)
+		}
 
+		//fmt.Println(tempstruct)
+		*b = append(*b, tempstruct)
+
+	}
+
+	var count = 0
+	for _, i := range tempslice {
+
+		for j := 0; j < len(event.Events); j++ {
+
+			if i.id == event.Events[j].Id && i.factor >= 921 && i.factor <= 923 {
+				query := fmt.Sprintf(`UPDATE events_level_1 set "%v" = %v where id = %v`, i.factor, i.bet, i.id)
+				fmt.Println(query)
+				_, err := db.Exec(query)
+				if err != nil {
+					logger.Warningf("Cant update result: %v  in ID: %v   error: %v", i.factor, i.id, err)
+				}
+				b := &count
+				*b++
+			}
+
+		}
+		logger.Infof("New copmare entries: %v", count)
+
+	}
 }
