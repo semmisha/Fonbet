@@ -2,15 +2,17 @@ package json
 
 type FonbetResult struct {
 	Events []struct {
-		Comment1  string `json:"comment1"`
-		Comment2  string `json:"comment2"`
-		Comment3  string `json:"comment3"`
-		GoalOrder string `json:"goalOrder"`
-		Id        string `json:"id"`
-		Name      string `json:"name"`
-		Score     string `json:"score"`
-		StartTime int64  `json:"startTime"`
-		Status    int    `json:"status"`
+		Comment1   string `json:"comment1"`
+		Comment2   string `json:"comment2"`
+		Comment3   string `json:"comment3"`
+		GoalOrder  string `json:"goalOrder"`
+		Id         string `json:"id"`
+		Name       string `json:"name"`
+		Team1Score int
+		Team2Score int
+		Score      string `json:"score"`
+		StartTime  int64  `json:"startTime"`
+		Status     int    `json:"status"`
 	} `json:"events"`
 	Sports []struct {
 		Name      string `json:"name"`

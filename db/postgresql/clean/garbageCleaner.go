@@ -1,10 +1,10 @@
 package clean
 
 import (
-	"database/sql"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
 )
 
-func Clean(db *sql.DB, logger *logrus.Logger) {
+func Clean(db *pgxpool.Pool, logger *logrus.Logger) {
 
 }

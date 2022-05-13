@@ -2,8 +2,9 @@ package utils
 
 import (
 	fonstruct "Fonbet/json"
-	"database/sql"
+	"context"
 	"fmt"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"time"
 )
 
@@ -17,14 +18,14 @@ func CheckLevels(fonbet *fonstruct.FonbetEvents, levels *int) {
 	}
 
 }
-func CreateLevels(db *sql.DB, levels *int) {
+func CreateLevels(db *pgxpool.Pool, levels *int) {
 
 	for i := 2; i <= *levels; i++ {
 		currentlevel := fmt.Sprintf("events_level_%v", i)
 		parentlevel := fmt.Sprintf("events_level_%v", i-1)
 
 		query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v (id INT PRIMARY KEY, parentid int, eventname VARCHAR(150), sportid INT, team1 VARCHAR(50), team2 VARCHAR(50), starttime INT, foreign key (parentid) references %v (id) )", currentlevel, parentlevel)
-		_, err := db.Exec(query)
+		_, err := db.Exec(context.Background(), query)
 		if err != nil {
 			fmt.Println(err)
 		}

@@ -4,6 +4,7 @@ import (
 	"Fonbet/api"
 	"Fonbet/db/postgresql"
 	"Fonbet/db/postgresql/connect"
+	"Fonbet/db/postgresql/create"
 	fonstruct "Fonbet/json"
 	logging "Fonbet/logging"
 	"Fonbet/utils"
@@ -16,9 +17,11 @@ var result *fonstruct.FonbetResult
 var dbConf = connect.DBClient{
 	User:     "postgres",
 	Password: "P@ssw0rd",
-	Host:     "localhost",
+	Host:     "172.16.14.67",
 	Port:     "5432",
 	Dbname:   "postgres"}
+
+//var once sync.Once
 
 func main() {
 	logger := logging.Logger()
@@ -27,7 +30,9 @@ func main() {
 
 	for {
 
-		db := connect.DbConnect2(logger)
+		db := connect.Connect(&dbConf, logger)
+		//once.Do()
+		create.DBStructure(db, logger)
 		api.Parse(&events, urlevents, logger)
 		err := Postgres.Sport(events, db, logger)
 		if err != nil {
@@ -50,11 +55,7 @@ func main() {
 
 		Postgres.CompareFactor(events, db, logger)
 
-		err = db.Close()
-		if err != nil {
-			fmt.Println(err)
-
-		}
+		db.Close()
 
 		time.Sleep(15 * time.Minute)
 
