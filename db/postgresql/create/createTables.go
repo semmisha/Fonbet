@@ -52,8 +52,8 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 
 	results, err := db.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS results (
 	stringname varchar(100) NOT NULL,
-	team1 varchar(100) NULL,
-	team2 varchar(100) NULL,
+	team1 int NULL,
+	team2 int NULL,
 	starttime int4 NOT NULL,
 	score varchar(50) NOT NULL,
 	CONSTRAINT result_constraint PRIMARY KEY (stringname, starttime)
