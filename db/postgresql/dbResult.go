@@ -35,7 +35,7 @@ func Result(fonbet *fonstruct.FonbetResult, db *pgxpool.Pool, logger *logrus.Log
 			if len(resultarray) >= 2 {
 				fonbet.Events[i].Team1Score, err = strconv.Atoi(resultarray[0])
 				fonbet.Events[i].Team2Score, err = strconv.Atoi(resultarray[1])
-				_, err = db.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, fonbet.Events[i].Team1Score, fonbet.Events[i].Team1Score)
+				_, err = db.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, fonbet.Events[i].Team1Score, fonbet.Events[i].Team2Score)
 
 				j := &count
 				*j++
