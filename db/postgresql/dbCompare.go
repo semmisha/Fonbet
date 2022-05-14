@@ -16,7 +16,7 @@ func CompareResult(result *fonstruct.FonbetResult, db *pgxpool.Pool, logger *log
 		team2     string
 		starttime int64
 	}
-	query, _ := db.Query(context.Background(), "Select id, team1,team2, starttime from events where result_bool = false")
+	query, _ := db.Query(context.Background(), "Select id, team1,team2, starttime from events")
 	var tempslice []temp
 	for query.Next() {
 		var tempstruct temp
@@ -41,7 +41,7 @@ func CompareResult(result *fonstruct.FonbetResult, db *pgxpool.Pool, logger *log
 				result.Events[j].Status == 3 {
 				b := &count
 				*b++
-				_, err := db.Exec(context.Background(), "UPDATE results set id = $1 where stringname = $2 and starttime = $3 ", i.id, result.Events[j].Name, result.Events[j].StartTime)
+				_, err := db.Exec(context.Background(), "UPDATE results set eventid = $1 where stringname = $2 and starttime = $3 ", i.id, result.Events[j].Name, result.Events[j].StartTime)
 
 				if err != nil {
 					logger.Warningf("Cant update result: %v  in ID: %v   error: %v", result.Events[j].Score, i.id, err)
