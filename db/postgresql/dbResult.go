@@ -7,7 +7,6 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
 	"log"
-	"strconv"
 	"strings"
 )
 
@@ -26,17 +25,17 @@ func Result(fonbet *fonstruct.FonbetResult, db *pgxpool.Pool, logger *logrus.Log
 			if err != nil {
 				fmt.Println(err)
 			}
-			//fmt.Println(sum)
 		}
 
-		if sum == 0 && strings.Contains(fonbet.Events[i].Name, "-") || sum == 0 && strings.Contains(fonbet.Events[i].Name, "–") {
+		if sum == 0 && strings.ContainsAny(fonbet.Events[i].Name, "-–") {
+
 			strarray := strings.Split(fonbet.Events[i].Score, " ")
 			resultarray := strings.Split(strarray[0], ":")
-			if len(resultarray) >= 2 {
-				fonbet.Events[i].Team1Score, err = strconv.Atoi(resultarray[0])
-				fonbet.Events[i].Team2Score, err = strconv.Atoi(resultarray[1])
-				_, err = db.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, fonbet.Events[i].Team1Score, fonbet.Events[i].Team2Score)
 
+			if len(resultarray) >= 2 && resultarray[0] != " " && resultarray[1] != " " {
+				var eventid int
+				_ = db.QueryRow(context.Background(), "Select coalesce((id),0) from events where (team1 = $1, team2 = $2, starttime = $3)", resultarray[0], resultarray[1], fonbet.Events[i].StartTime).Scan(&eventid)
+				_, err = db.Exec(context.Background(), "INSERT INTO results (eventid, stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5,$6)", eventid, fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, resultarray[0], resultarray[1])
 				j := &count
 				*j++
 				if err != nil {

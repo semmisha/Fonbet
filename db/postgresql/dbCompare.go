@@ -41,7 +41,7 @@ func CompareResult(result *fonstruct.FonbetResult, db *pgxpool.Pool, logger *log
 				result.Events[j].Status == 3 {
 				b := &count
 				*b++
-				_, err := db.Exec(context.Background(), "UPDATE events set result = $1, team1result = $2, team2result = $3 result_bool = true where id = $4", result.Events[j].Score, result.Events[j].Team1Score, result.Events[j].Team2Score, i.id)
+				_, err := db.Exec(context.Background(), "UPDATE events set result = $1, team1result = $2, team2result = $3, result_bool = true where id = $4", result.Events[j].Score, result.Events[j].Team1Score, result.Events[j].Team2Score, i.id)
 
 				if err != nil {
 					logger.Warningf("Cant update result: %v  in ID: %v   error: %v", result.Events[j].Score, i.id, err)

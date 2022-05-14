@@ -28,14 +28,12 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 	id int4 NOT NULL,
 	parentid int4 NULL,
 	eventname varchar(150) NULL,
-	sportid int4 NULL,
-	team1 varchar(50) NULL,
+	sportid int4 NOT NULL,
+	team1id int4 NOT NULL,
+    team2id int4 NOT NULL,
+    team1 varchar(50) NULL,
 	team2 varchar(50) NULL,
-	starttime int4 NULL,
-	result_bool bool NULL DEFAULT false,
-	"result" varchar(50) NULL,
-	"team1result" int NULL,
-	"team2result" int NULL,
+	starttime int4 NOT NULL,
     "921" float8 NULL,
 	"922" float8 NULL,
 	"923" float8 NULL,
@@ -51,11 +49,13 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 	}
 
 	results, err := db.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS results (
-	stringname varchar(100) NOT NULL,
+	eventid int4 NULL
+    stringname varchar(100) NOT NULL,
 	team1 int NULL,
 	team2 int NULL,
 	starttime int4 NOT NULL,
 	score varchar(50) NOT NULL,
+    FOREIGN KEY (eventid) References events (id)
 	CONSTRAINT result_constraint PRIMARY KEY (stringname, starttime)
 );
 
