@@ -37,6 +37,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
     "921" float8 NULL,
 	"922" float8 NULL,
 	"923" float8 NULL,
+FOREIGN KEY (sportid) References sports (sportid),
 	CONSTRAINT events_pkey PRIMARY KEY (id)
 );
 `)
@@ -49,7 +50,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 	}
 
 	results, err := db.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS results (
-	eventid int4 NULL,
+	eventid int4 NULL UNIQUE,
     stringname varchar(100) NOT NULL,
 	team1 int NULL,
 	team2 int NULL,
