@@ -17,7 +17,7 @@ var result *fonstruct.FonbetResult
 var dbConf = connect.DBClient{
 	User:     "postgres",
 	Password: "P@ssw0rd",
-	Host:     "172.16.14.67",
+	Host:     "localhost",
 	Port:     "5432",
 	Dbname:   "postgres"}
 

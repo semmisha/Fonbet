@@ -33,9 +33,7 @@ func Result(fonbet *fonstruct.FonbetResult, db *pgxpool.Pool, logger *logrus.Log
 			resultarray := strings.Split(strarray[0], ":")
 
 			if len(resultarray) >= 2 && resultarray[0] != " " && resultarray[1] != " " {
-				var eventid int
-				_ = db.QueryRow(context.Background(), "Select coalesce((id),0) from events where (team1 = $1, team2 = $2, starttime = $3)", resultarray[0], resultarray[1], fonbet.Events[i].StartTime).Scan(&eventid)
-				_, err = db.Exec(context.Background(), "INSERT INTO results (eventid, stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5,$6)", eventid, fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, resultarray[0], resultarray[1])
+				_, err = db.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, resultarray[0], resultarray[1])
 				j := &count
 				*j++
 				if err != nil {

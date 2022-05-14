@@ -26,7 +26,7 @@ func Sport(fonbet *fonstruct.FonbetEvents, db *pgxpool.Pool, logger *logrus.Logg
 		}
 
 		if sum == 0 {
-			_, err := db.Exec(context.Background(), "INSERT INTO sports VALUES ($1, $2, $3)", fonbet.Sports[i].Id, fonbet.Sports[i].ParentId, fonbet.Sports[i].Name)
+			_, err := db.Exec(context.Background(), "INSERT INTO sports (sportid, parentid, name) VALUES ($1, $2, $3)", fonbet.Sports[i].Id, fonbet.Sports[i].ParentId, fonbet.Sports[i].Name)
 			j := &count
 			*j++
 			if err != nil {
