@@ -2,6 +2,7 @@ package Postgres
 
 import (
 	fonstruct "Fonbet/json"
+	"Fonbet/utils"
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -16,7 +17,8 @@ func Result(fonbet *fonstruct.FonbetResult, db *pgxpool.Pool, logger *logrus.Log
 	var sum, count = 0, 0
 
 	for i := 0; i < len(fonbet.Events); i++ {
-		exist, err := db.Query(context.Background(), `SELECT coalesce((sum(CASE WHEN $1 IN ("stringname") and $2 in ("starttime")THEN 1 ELSE 0 END)),0) FROM results ;`, fonbet.Events[i].Name, fonbet.Events[i].StartTime)
+		sportid := utils.SearchSportId(fonbet, i, logger)
+		exist, err := db.Query(context.Background(), `SELECT coalesce((sum(CASE WHEN $1 IN ("stringname") and $2 in ("starttime") and $3 in ("sportid") THEN 1 ELSE 0 END)),0) FROM results ;`, fonbet.Events[i].Name, fonbet.Events[i].StartTime, sportid)
 		if err != nil {
 			log.Println(err)
 		}
@@ -34,11 +36,11 @@ func Result(fonbet *fonstruct.FonbetResult, db *pgxpool.Pool, logger *logrus.Log
 
 			if len(resultarray) >= 2 && resultarray[0] != " " && resultarray[1] != " " {
 				if sum == 0 {
-					_, err = db.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1,team2) VALUES ($1, $2, $3, $4, $5)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, resultarray[0], resultarray[1])
+					_, err = db.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1,team2,sportid) VALUES ($1, $2, $3, $4, $5,$6)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, resultarray[0], resultarray[1], sportid)
 					j := &count
 					*j++
 					if err != nil {
-						fmt.Println(err)
+						logger.Warningf("Unable to insert into Results: %v sum:%v  error:%v\n", fonbet.Events[i].Name, sum, err)
 					}
 				}
 

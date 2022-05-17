@@ -3,20 +3,25 @@ package logging
 import (
 	"github.com/sirupsen/logrus"
 	"os"
-	"time"
 )
 
 func Logger() (logger *logrus.Logger) {
 	logger = logrus.New()
 	logger.ReportCaller = true
 
-	logger.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat:  time.Kitchen,
-		DisableTimestamp: false,
-		DataKey:          "",
-		FieldMap:         nil,
-		CallerPrettyfier: nil,
-		PrettyPrint:      false,
+	logger.SetFormatter(&logrus.TextFormatter{
+		ForceColors:               true,
+		DisableColors:             false,
+		EnvironmentOverrideColors: false,
+		DisableTimestamp:          true,
+		FullTimestamp:             false,
+		TimestampFormat:           "",
+		DisableSorting:            false,
+		SortingFunc:               nil,
+		DisableLevelTruncation:    false,
+		QuoteEmptyFields:          false,
+		FieldMap:                  nil,
+		CallerPrettyfier:          nil,
 	})
 	logger.Out = os.Stdout
 	return

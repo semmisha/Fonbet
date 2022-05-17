@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/sirupsen/logrus"
+	"strconv"
 	"time"
 )
 
@@ -40,4 +42,20 @@ func DayCount(url string, day int) (urldate string) {
 	urldate = fmt.Sprintf("%v&lineDate=%v-%02v-%02v", url, year, int(month), day)
 	//fmt.Println(urldate)
 	return
+}
+
+func SearchSportId(fonbet *fonstruct.FonbetResult, i int, logger *logrus.Logger) int {
+
+	for j := 0; j < len(fonbet.Sections); j++ {
+		for b := 0; b < len(fonbet.Sections[j].Events); b++ {
+			d, _ := strconv.Atoi(fonbet.Events[i].Id)
+			if fonbet.Sections[j].Events[b] == d {
+				return fonbet.Sections[j].FonbetCompetitionId
+			}
+		}
+
+	}
+
+	logger.Errorf("Cant find sport id for: %v\n ", fonbet.Events[i].Name)
+	return 0
 }

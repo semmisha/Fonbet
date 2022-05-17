@@ -7,7 +7,6 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-	"log"
 )
 
 func Events(fonbet *fonstruct.FonbetEvents, db *pgxpool.Pool, logger *logrus.Logger) (err error) {
@@ -17,12 +16,12 @@ func Events(fonbet *fonstruct.FonbetEvents, db *pgxpool.Pool, logger *logrus.Log
 		query := fmt.Sprintf("SELECT coalesce((sum(CASE WHEN $1 IN (id) THEN 1 ELSE 0 END) ),0) FROM events;")
 		exist, err := db.Query(context.Background(), query, fonbet.Events[i].Id)
 		if err != nil {
-			log.Println(err)
+			logger.Warningf("Unable to select: %v   error: %v\n", fonbet.Events[i].Id, err)
 		}
 		for exist.Next() {
 			err := exist.Scan(&sum)
 			if err != nil {
-				fmt.Println(err)
+				logger.Warningf("Unable to scan error: %v\n", err)
 			}
 
 		}
@@ -33,21 +32,10 @@ func Events(fonbet *fonstruct.FonbetEvents, db *pgxpool.Pool, logger *logrus.Log
 			j := &count
 			*j++
 			if err != nil {
-				fmt.Println(err)
-			}
-			for _, b := range fonbet.CustomFactors {
-				for _, c := range b.Factors {
-					if b.E == fonbet.Events[i].Id && (c.F == 921 || c.F == 922 || c.F == 923) {
-						query := fmt.Sprintf(`UPDATE events  set "%v" = %v where id = $1`, c.F, c.V)
-						_, err := db.Exec(context.Background(), query, fonbet.Events[i].Id)
-						if err != nil {
-							fmt.Println(err)
-						}
+				logger.Warningf("Unable to insert: %v error: %v\n", fonbet.Events[i].Id, err)
 
-					}
-
-				}
 			}
+			Factors(fonbet, i, db, logger)
 		}
 	}
 

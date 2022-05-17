@@ -53,8 +53,6 @@ func main() {
 
 		}
 
-		Postgres.CompareFactor(events, db, logger)
-
 		db.Close()
 
 		time.Sleep(15 * time.Minute)

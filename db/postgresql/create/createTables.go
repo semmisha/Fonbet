@@ -34,10 +34,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
     team1 varchar(50) NULL,
 	team2 varchar(50) NULL,
 	starttime int4 NOT NULL,
-    "921" float8 NULL,
-	"922" float8 NULL,
-	"923" float8 NULL,
-FOREIGN KEY (sportid) References sports (sportid),
+    FOREIGN KEY (sportid) References sports (sportid),
 	CONSTRAINT events_pkey PRIMARY KEY (id)
 );
 `)
@@ -51,22 +48,38 @@ FOREIGN KEY (sportid) References sports (sportid),
 
 	results, err := db.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS results (
 	eventid int4 NULL UNIQUE,
+    sportid int NOT NULL, 
     stringname varchar(100) NOT NULL,
 	team1 int NULL,
 	team2 int NULL,
 	starttime int4 NOT NULL,
 	score varchar(50) NOT NULL,
     FOREIGN KEY (eventid) References events (id),
-	CONSTRAINT result_constraint PRIMARY KEY (stringname, starttime)
+	FOREIGN KEY (sportid) References sports (sportid),
+    CONSTRAINT result_constraint PRIMARY KEY (stringname, starttime, sportid)
 );
-
-
-
 `)
 	if err != nil {
 		logger.WithFields(logrus.Fields{
 			"message":     "cant create table results",
 			"query reply": results.String(),
+		}).Error(err)
+
+	}
+
+	factors, err := db.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS factors (
+	eventid int4 NOT NULL UNIQUE,
+    "921" float8 NULL,
+	"922" float8 NULL,
+	"923" float8 NULL,
+    FOREIGN KEY (eventid) References events (id)
+	
+);
+`)
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"message":     "cant create table results",
+			"query reply": factors.String(),
 		}).Error(err)
 
 	}
