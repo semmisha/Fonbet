@@ -40,7 +40,7 @@ func main() {
 		}
 		Postgres.Events(events, db, logger)
 
-		for i := 0; i <= 1; i++ {
+		for i := 0; i <= 4; i++ {
 			api.Parse(&result, utils.DayCount(urlresult, i), logger)
 			//test := Postgres.Connect(&dbConf)
 			//fmt.Printf(":%v", test)
@@ -49,10 +49,11 @@ func main() {
 				fmt.Println(err)
 
 			}
-			Postgres.CompareResult(result, db, logger)
+			Postgres.CompareResult(db, logger)
 
 		}
 
+		fmt.Println("|-------Done-------|")
 		db.Close()
 
 		time.Sleep(15 * time.Minute)

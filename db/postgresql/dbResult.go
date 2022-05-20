@@ -4,10 +4,8 @@ import (
 	fonstruct "Fonbet/json"
 	"Fonbet/utils"
 	"context"
-	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
-	"log"
 	"strings"
 )
 
@@ -20,16 +18,18 @@ func Result(fonbet *fonstruct.FonbetResult, db *pgxpool.Pool, logger *logrus.Log
 		sportid := utils.SearchSportId(fonbet, i, logger)
 		exist, err := db.Query(context.Background(), `SELECT coalesce((sum(CASE WHEN $1 IN ("stringname") and $2 in ("starttime") and $3 in ("sportid") THEN 1 ELSE 0 END)),0) FROM results ;`, fonbet.Events[i].Name, fonbet.Events[i].StartTime, sportid)
 		if err != nil {
-			log.Println(err)
+			logger.Errorf("Unable to SELECT sum, error:%v\n ", err)
+
 		}
 		for exist.Next() {
 			err := exist.Scan(&sum)
 			if err != nil {
-				fmt.Println(err)
+				logger.Errorf("Unable to SCAN sum, error:%v\n ", err)
+
 			}
 		}
 
-		if strings.ContainsAny(fonbet.Events[i].Name, "-––") && fonbet.Events[i].Status == 3 {
+		if strings.ContainsAny(fonbet.Events[i].Name, "-––") && fonbet.Events[i].Status == 3 && strings.Contains(fonbet.Events[i].Name, "очковые") != true {
 
 			strarray := strings.Split(fonbet.Events[i].Score, " ")
 			resultarray := strings.Split(strarray[0], ":")
