@@ -1,4 +1,4 @@
-package create
+package Create
 
 import (
 	"context"
@@ -18,7 +18,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 `)
 	if err != nil {
 		logger.WithFields(logrus.Fields{
-			"message":     "cant create table sports",
+			"message":     "cant Create table sports",
 			"query reply": sportid.String(),
 		}).Error(err)
 
@@ -40,7 +40,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 `)
 	if err != nil {
 		logger.WithFields(logrus.Fields{
-			"message":     "cant create table events",
+			"message":     "cant Create table events",
 			"query reply": events.String(),
 		}).Error(err)
 
@@ -60,7 +60,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 `)
 	if err != nil {
 		logger.WithFields(logrus.Fields{
-			"message":     "cant create table results",
+			"message":     "cant Create table results",
 			"query reply": results.String(),
 		}).Error(err)
 
@@ -77,7 +77,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 `)
 	if err != nil {
 		logger.WithFields(logrus.Fields{
-			"message":     "cant create table results",
+			"message":     "cant Create table results",
 			"query reply": factors.String(),
 		}).Error(err)
 

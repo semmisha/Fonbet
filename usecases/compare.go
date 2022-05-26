@@ -1,4 +1,4 @@
-package Postgres
+package usecases
 
 import (
 	"Fonbet/utils"

@@ -3,6 +3,7 @@ package logging
 import (
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"path"
 	"runtime"
@@ -30,6 +31,11 @@ func Logger() (logger *logrus.Logger) {
 
 		},
 	})
-	logger.Out = os.Stdout
+	file, err := os.OpenFile("./logging/logs.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
+	if err != nil {
+		logger.Errorf("Unable to Create/open file: %v", file.Name())
+	}
+
+	logger.Out = io.MultiWriter(os.Stdout, file)
 	return
 }

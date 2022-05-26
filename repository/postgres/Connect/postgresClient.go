@@ -1,11 +1,10 @@
-package connect
+package Connect
 
 import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
-	"log"
 )
 
 type DBClient struct {
@@ -21,7 +20,7 @@ func Connect(db *DBClient, logger *logrus.Logger) (pool *pgxpool.Pool) {
 
 	pool, err := pgxpool.Connect(context.Background(), dbURL)
 	if err != nil {
-		log.Fatal("Cant connect to DB, error: ", err)
+		logger.Fatalf("Cant Connect to DB by pool, error: ", err)
 	}
 
 	return

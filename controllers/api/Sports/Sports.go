@@ -1,4 +1,4 @@
-package api
+package Sports
 
 import (
 	"encoding/json"
@@ -7,7 +7,19 @@ import (
 	"net/http"
 )
 
-func Parse[T any](fonbet *T, url string, logger *logrus.Logger) {
+type SportsStruct struct {
+	Sports []struct {
+		Id        int    `json:"id"`
+		Kind      string `json:"kind"`
+		SortOrder string `json:"sortOrder"`
+		Name      string `json:"name"`
+		ParentId  int    `json:"parentId,omitempty"`
+		ParentIds []int  `json:"parentIds,omitempty"`
+		RegionId  int    `json:"regionId,omitempty"`
+	} `json:"sports"`
+}
+
+func (fonbet *SportsStruct) Parse(url string, logger *logrus.Logger) error {
 
 	request, err := http.Get(url)
 	if err != nil {
@@ -27,5 +39,5 @@ func Parse[T any](fonbet *T, url string, logger *logrus.Logger) {
 	if err != nil {
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}
-
+	return err
 }
