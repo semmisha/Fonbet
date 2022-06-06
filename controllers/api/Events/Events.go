@@ -30,7 +30,7 @@ type EventStruct struct {
 }
 
 func (fonbet *EventStruct) Parse(url *api.ListURLStruct, logger *logrus.Logger) error {
-	response := api.Carousele(url.Common, "/events/list")
+	response := api.Carousele(url.LineDesktop, "/events/list")
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		logger.Errorf("Cant ReadALL URL: %v  error: %v", url, err)

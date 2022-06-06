@@ -2,7 +2,6 @@ package Events
 
 import (
 	"Fonbet/controllers/api/Events"
-	"fmt"
 	"time"
 )
 
@@ -41,5 +40,5 @@ func (f *UcEventSlice) ReAssign(fonbet Events.EventStruct) {
 		}
 
 	}
-	fmt.Println(f)
+	//fmt.Println(f)
 }
