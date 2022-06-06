@@ -1,10 +1,10 @@
 package Events
 
 import (
+	"Fonbet/controllers/api"
 	"encoding/json"
 	"github.com/sirupsen/logrus"
 	"io"
-	"net/http"
 )
 
 type EventStruct struct {
@@ -29,14 +29,9 @@ type EventStruct struct {
 	} `json:"events"`
 }
 
-func (fonbet *EventStruct) Parse(url string, logger *logrus.Logger) error {
-
-	request, err := http.Get(url)
-	if err != nil {
-		logger.Errorf("Cant Parse URL: %v  error: %v", url, err)
-	}
-
-	body, err := io.ReadAll(request.Body)
+func (fonbet *EventStruct) Parse(url *api.ListURLStruct, logger *logrus.Logger) error {
+	response := api.Carousele(url.Common, "/events/list")
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		logger.Errorf("Cant ReadALL URL: %v  error: %v", url, err)
 
@@ -45,7 +40,7 @@ func (fonbet *EventStruct) Parse(url string, logger *logrus.Logger) error {
 	if err != nil {
 		logger.Errorf("Cant Unmarshall URL: %v  error: %v", url, err)
 	}
-	err = request.Body.Close()
+	err = response.Body.Close()
 	if err != nil {
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}

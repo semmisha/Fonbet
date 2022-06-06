@@ -2,26 +2,42 @@ package utils
 
 import (
 	"fmt"
+	"reflect"
+	"strconv"
 	"time"
 )
 
+type EpochInt interface {
+	uint | uint32 | uint64 | int | int32 | int64
+}
 type Epoch interface {
-	int | int64 | string
+	EpochInt | string
 }
 
-func EpochToTime[check Epoch](check) time.Time {
-	var b check
-	switch c := b.(type) {
+func EpochToTime[check Epoch](b check) time.Time {
+	var fonInt int64
+	c := reflect.TypeOf(fonInt)
+	fmt.Println(c.Name())
+
+	switch b.(type) {
 	case string:
-		fmt.Printf("string %v", c)
-	case int:
-		fmt.Printf("string")
+		c, err := strconv.Atoi(b.(string))
+		if err != nil {
+			fmt.Println("Wrong input string. error:%v", err)
+
+		} else {
+			fonInt = int64(c)
+
+		}
+
+	case uint, uint32, uint64, int, int32:
+		fonInt = int64(EpochInt(b))
 	case int64:
-		fmt.Printf("string")
+		fonInt = b.(int64)
 
 	}
-
-	return time.Now()
+	fontime := time.Unix(int64(fonInt), 0)
+	return fontime
 
 }
 

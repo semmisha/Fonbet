@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Fonbet/controllers/api"
 	"Fonbet/logging"
 	"Fonbet/repository/postgres/Connect"
 	"Fonbet/repository/postgres/Create"
@@ -18,13 +19,14 @@ import (
 var dbConf = Connect.DBClient{
 	User:     "postgres",
 	Password: "P@ssw0rd",
-	Host:     "127.0.0.1",
+	Host:     "172.16.14.67",
 	Port:     "5432",
 	Dbname:   "postgres"}
 
 //var once sync.Once
 
 func main() {
+	const urls = "https://www.fon.bet/urls.json"
 	const urlevents = "https://line06w.bkfon-resources.com/events/list?lang=ru&version=7987900598&scopeMarket=1600"
 	const urlresult = "https://clientsapi03w.bkfon-resources.com/results/results.json.php?locale=ru"
 
@@ -33,6 +35,7 @@ func main() {
 		logger = logging.Logger()
 		Db     = Connect.Connect(&dbConf, logger)
 		//------- Parse
+		fonUrl  = api.ListURLStruct{}
 		sports  = Sports.DbSports{Db: Db}
 		events  = Events.DbEvents{Db: Db}
 		factors = Factors.DbFactors{Db: Db}
@@ -46,6 +49,7 @@ func main() {
 	Create.DBStructure(Db, logger)
 	for {
 		logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
+		fonUrl.Parse(urls, logger)
 
 		sports.Fonbet.Parse(urlevents, logger)
 		ucSports.ReAssign(sports.Fonbet)
