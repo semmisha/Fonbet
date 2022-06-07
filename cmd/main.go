@@ -9,10 +9,6 @@ import (
 	"Fonbet/repository/postgres/Insert/Factors"
 	"Fonbet/repository/postgres/Insert/Results"
 	"Fonbet/repository/postgres/Insert/Sports"
-	Events2 "Fonbet/usecases/Events"
-	Factors2 "Fonbet/usecases/Factors"
-	Results2 "Fonbet/usecases/Results"
-	Sports2 "Fonbet/usecases/Sports"
 	"time"
 )
 
@@ -34,7 +30,7 @@ func main() {
 		//------- Main
 		logger = logging.Logger()
 		Db     = Connect.Connect(&dbConf, logger)
-		//------- Parse
+		//------- JsonToStruct
 		fonUrl  = api.ListURLStruct{}
 		sports  = Sports.DbSports{Db: Db}
 		events  = Events.DbEvents{Db: Db}
@@ -49,17 +45,17 @@ func main() {
 	Create.DBStructure(Db, logger)
 	for {
 		logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
-		fonUrl.Parse(urls, logger)
+		fonUrl.JsonToStruct(urls, logger)
 
-		sports.Fonbet.Parse(urlevents, logger)
+		sports.Fonbet.JsonToStruct(urlevents, logger)
 		ucSports.ReAssign(sports.Fonbet)
 
 		events.Fonbet.Parse(urlevents, logger)
 		ucEvents.ReAssign(events.Fonbet)
 
-		factors.Fonbet.Parse(urlevents, logger)
+		factors.Fonbet.JsonToStruct(urlevents, logger)
 		ucFactors.ReAssign(factors.Fonbet)
-		results.Fonbet.Parse(urlresult, logger)
+		results.Fonbet.JsonToStruct(urlresult, logger)
 
 		ucResults.ReAssign(results.Fonbet, logger)
 		logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))

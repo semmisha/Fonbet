@@ -20,11 +20,11 @@ type CustomFactorsStruct struct {
 	} `json:"customFactors"`
 }
 
-func (fonbet *CustomFactorsStruct) Parse(url string, logger *logrus.Logger) error {
+func (fonbet *CustomFactorsStruct) JsonToStruct(url string, logger *logrus.Logger) error {
 
 	request, err := http.Get(url)
 	if err != nil {
-		logger.Errorf("Cant Parse URL: %v  error: %v", url, err)
+		logger.Errorf("Cant JsonToStruct URL: %v  error: %v", url, err)
 	}
 
 	body, err := io.ReadAll(request.Body)
