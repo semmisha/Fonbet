@@ -9,7 +9,7 @@ import (
 )
 
 type DbFactors struct {
-	Fonbet Factors2.CustomFactorsStruct
+	Fonbet Factors2.ApiFactors
 	Db     *pgxpool.Pool
 }
 

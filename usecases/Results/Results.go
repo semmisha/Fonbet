@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-type UcResultSlice struct {
-	UcResultsStruct []UcResultsStruct
+type UcResults struct {
+	UcResultsStruct []Result
 }
 
-type UcResultsStruct struct {
+type Result struct {
 	eventid    int
 	id         int
 	name       string
@@ -23,7 +23,7 @@ type UcResultsStruct struct {
 	sportId    int
 }
 
-func (f *UcResultSlice) ReAssign(fonbet Results.ResultsStruct, logger *logrus.Logger) {
+func (f *UcResults) ReAssign(fonbet Results.ApiResults, logger *logrus.Logger) {
 
 	for i := 0; i < len(fonbet.Events); i++ {
 		stringId, err := strconv.Atoi(fonbet.Events[i].Id)
@@ -43,7 +43,7 @@ func (f *UcResultSlice) ReAssign(fonbet Results.ResultsStruct, logger *logrus.Lo
 					}
 
 					fontime := time.Unix(int64(fonbet.Events[i].StartTime), 0)
-					g := UcResultsStruct{
+					g := Result{
 						id:         stringId,
 						name:       fonbet.Events[i].Name,
 						team1Score: resultslice[0],

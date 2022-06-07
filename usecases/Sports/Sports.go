@@ -4,19 +4,19 @@ import (
 	"Fonbet/controllers/api/Sports"
 )
 
-type UcSportsSlice struct {
-	UcSportsStruct []UcSportsStruct
+type UcSports struct {
+	UcSportsStruct []Sport
 }
 
-type UcSportsStruct struct {
+type Sport struct {
 	id       int
 	parentid int
 	name     string
 }
 
-func (f *UcSportsSlice) ReAssign(fonbet Sports.SportsStruct) {
+func (f *UcSports) ReAssign(fonbet Sports.ApiSports) {
 	for i := 0; i < len(fonbet.Sports); i++ {
-		j := UcSportsStruct{
+		j := Sport{
 			id:       fonbet.Sports[i].Id,
 			parentid: fonbet.Sports[i].ParentId,
 			name:     fonbet.Sports[i].Name,

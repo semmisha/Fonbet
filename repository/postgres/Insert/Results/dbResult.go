@@ -15,7 +15,7 @@ import (
 //)
 //
 type DbResults struct {
-	Fonbet Results.ResultsStruct
+	Fonbet Results.ApiResults
 	Db     *pgxpool.Pool
 }
 

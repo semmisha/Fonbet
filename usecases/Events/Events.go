@@ -2,14 +2,16 @@ package Events
 
 import (
 	"Fonbet/controllers/api/Events"
+	Events2 "Fonbet/repository/postgres/Insert/Events"
+	"github.com/sirupsen/logrus"
 	"time"
 )
 
-type UcEventSlice struct {
-	UcEventStruct []UcEventStruct
+type UcEvents struct {
+	UcEventStruct []Event
 }
 
-type UcEventStruct struct {
+type Event struct {
 	Id        int
 	SportId   int
 	Team1Id   int
@@ -20,12 +22,12 @@ type UcEventStruct struct {
 	StartTime time.Time
 }
 
-func (f *UcEventSlice) ReAssign(fonbet Events.EventStruct) {
+func (f *UcEvents) ReAssign(fonbet Events.ApiEvents) {
 	for i := 0; i < len(fonbet.Events); i++ {
 		if fonbet.Events[i].Team2Id != 0 && fonbet.Events[i].Team1Id != 0 && fonbet.Events[i].Level == 1 {
 
 			fontime := time.Unix(int64(fonbet.Events[i].StartTime), 0)
-			j := UcEventStruct{
+			j := Event{
 				Id:        fonbet.Events[i].Id,
 				SportId:   fonbet.Events[i].SportId,
 				Team1Id:   fonbet.Events[i].Team1Id,
@@ -41,4 +43,13 @@ func (f *UcEventSlice) ReAssign(fonbet Events.EventStruct) {
 
 	}
 	//fmt.Println(f)
+}
+
+func (f *UcEvents) CreateDbVar(logger *logrus.Logger) (dbfon Events2.DbEvents) {
+
+	dbfon = Events2.DbEvents{
+		UcEventStruct: f.UcEventStruct,
+	}
+
+	return dbfon
 }

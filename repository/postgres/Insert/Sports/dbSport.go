@@ -8,7 +8,7 @@ import (
 )
 
 type DbSports struct {
-	Fonbet Sports.SportsStruct
+	Fonbet Sports.ApiSports
 	Db     *pgxpool.Pool
 }
 

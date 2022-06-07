@@ -7,7 +7,7 @@ import (
 	"io"
 )
 
-type EventStruct struct {
+type ApiEvents struct {
 	Events []struct {
 		Id             int    `json:"id"`
 		ParentId       int    `json:"parentId,omitempty"`
@@ -29,7 +29,7 @@ type EventStruct struct {
 	} `json:"events"`
 }
 
-func (fonbet *EventStruct) Parse(url *api.ListURLStruct, logger *logrus.Logger) error {
+func (fonbet *ApiEvents) Parse(url *api.ListURLStruct, logger *logrus.Logger) error {
 	response := api.Carousele(url.LineDesktop, "/events/list")
 	body, err := io.ReadAll(response.Body)
 	if err != nil {

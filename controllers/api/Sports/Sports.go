@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type SportsStruct struct {
+type ApiSports struct {
 	Sports []struct {
 		Id        int    `json:"id"`
 		Kind      string `json:"kind"`
@@ -19,7 +19,7 @@ type SportsStruct struct {
 	} `json:"sports"`
 }
 
-func (fonbet *SportsStruct) JsonToStruct(url string, logger *logrus.Logger) error {
+func (fonbet *ApiSports) JsonToStruct(url string, logger *logrus.Logger) error {
 
 	request, err := http.Get(url)
 	if err != nil {

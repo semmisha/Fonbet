@@ -4,21 +4,21 @@ import (
 	"Fonbet/controllers/api/Factors"
 )
 
-type UcFactorsSlice struct {
-	UcFactorsStruct []UcFactorsStruct
+type UcFactors struct {
+	UcFactorsStruct []Factor
 }
 
-type UcFactorsStruct struct {
+type Factor struct {
 	id     int
 	frstWn float64
 	drw    float64
 	scndWn float64
 }
 
-func (f *UcFactorsSlice) ReAssign(fonbet Factors.CustomFactorsStruct) {
+func (f *UcFactors) ReAssign(fonbet Factors.ApiFactors) {
 
 	for i := 0; i < len(fonbet.CustomFactors); i++ {
-		g := UcFactorsStruct{
+		g := Factor{
 			id:     fonbet.CustomFactors[i].E,
 			frstWn: 0,
 			drw:    0,

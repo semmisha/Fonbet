@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type CustomFactorsStruct struct {
+type ApiFactors struct {
 	CustomFactors []struct {
 		E        int `json:"e"`
 		CountAll int `json:"countAll"`
@@ -20,7 +20,7 @@ type CustomFactorsStruct struct {
 	} `json:"customFactors"`
 }
 
-func (fonbet *CustomFactorsStruct) JsonToStruct(url string, logger *logrus.Logger) error {
+func (fonbet *ApiFactors) JsonToStruct(url string, logger *logrus.Logger) error {
 
 	request, err := http.Get(url)
 	if err != nil {
