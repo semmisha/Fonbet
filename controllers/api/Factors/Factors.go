@@ -1,10 +1,10 @@
-package Factors
+package ApiFactors
 
 import (
+	"Fonbet/controllers/api"
 	"encoding/json"
 	"github.com/sirupsen/logrus"
 	"io"
-	"net/http"
 )
 
 type ApiFactors struct {
@@ -20,14 +20,11 @@ type ApiFactors struct {
 	} `json:"customFactors"`
 }
 
-func (fonbet *ApiFactors) JsonToStruct(url string, logger *logrus.Logger) error {
+func (fonbet *ApiFactors) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) error {
 
-	request, err := http.Get(url)
-	if err != nil {
-		logger.Errorf("Cant JsonToStruct URL: %v  error: %v", url, err)
-	}
+	response := api.Carousele(url.LineDesktop, "/events/list")
 
-	body, err := io.ReadAll(request.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		logger.Errorf("Cant ReadALL URL: %v  error: %v", url, err)
 
@@ -36,7 +33,7 @@ func (fonbet *ApiFactors) JsonToStruct(url string, logger *logrus.Logger) error 
 	if err != nil {
 		logger.Errorf("Cant Unmarshall URL: %v  error: %v", url, err)
 	}
-	err = request.Body.Close()
+	err = response.Body.Close()
 	if err != nil {
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}

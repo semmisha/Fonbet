@@ -1,7 +1,6 @@
-package Results
+package DbResults
 
 import (
-	"Fonbet/controllers/api/Results"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -41,7 +40,7 @@ type DbResults struct {
 //			//TODO move to use cases	firstTeam, secondTeam, ok := f.Split(i, logger)
 //
 //			if exist == false && ok == true {
-//				_, err = conn.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1,team2,sportid) VALUES ($1, $2, $3, $4, $5,$6)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, firstTeam, secondTeam, sportId)
+//				_, err = conn.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1score,team2score,sportid) VALUES ($1, $2, $3, $4, $5,$6)", fonbet.Events[i].Name, fonbet.Events[i].StartTime, fonbet.Events[i].Score, firstTeam, secondTeam, sportId)
 //
 //				if err != nil {
 //					logger.Warningf("Unable to Insert into Results: %v exist:%v  error:%v\n", fonbet.Events[i].Name, exist, err)

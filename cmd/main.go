@@ -2,15 +2,23 @@ package main
 
 import (
 	"Fonbet/controllers/api"
-	Events2 "Fonbet/controllers/api/Events"
+	ApiEvents "Fonbet/controllers/api/Events"
+	Factors2 "Fonbet/controllers/api/Factors"
+	ApiSports "Fonbet/controllers/api/Sports"
 	"Fonbet/logging"
-	"Fonbet/repository/postgres/Connect"
-	"Fonbet/repository/postgres/Create"
-	Events3 "Fonbet/usecases/Events"
+	dbConnect "Fonbet/repository/postgres/Connect"
+	dbCreate "Fonbet/repository/postgres/Create"
+	DbEvents "Fonbet/repository/postgres/Insert/Events"
+	DbFactors "Fonbet/repository/postgres/Insert/Factors"
+	DbSports "Fonbet/repository/postgres/Insert/Sports"
+	UcEvents "Fonbet/usecases/Events"
+	UcFactors "Fonbet/usecases/Factors"
+	UcSports "Fonbet/usecases/Sports"
+
 	"time"
 )
 
-var dbConf = Connect.DBClient{
+var dbConf = dbConnect.DBClient{
 	User:     "postgres",
 	Password: "P@ssw0rd",
 	Host:     "172.16.14.67",
@@ -21,40 +29,50 @@ var dbConf = Connect.DBClient{
 
 func main() {
 	const urls = "https://www.fon.bet/urls.json"
-	const urlevents = "https://line06w.bkfon-resources.com/apiEvents/list?lang=ru&version=7987900598&scopeMarket=1600"
-	const urlresult = "https://clientsapi03w.bkfon-resources.com/apiResults/apiResults.json.php?locale=ru"
 
 	var (
 		//------- Main
 		logger = logging.Logger()
-		db     = Connect.Connect(&dbConf, logger)
+		db     = dbConnect.Connect(&dbConf, logger)
 		//------- JsonToStruct
-		fonUrl = api.ListURLStruct{}
-		//apiSports = Sports2.ApiSports{}
-		apiEvents = Events2.ApiEvents{}
-		//apiFactors = Factors2.ApiFactors{}
+		fonUrl     = api.ListURLStruct{}
+		apiSports  = ApiSports.ApiSports{}
+		apiEvents  = ApiEvents.ApiEvents{}
+		apiFactors = Factors2.ApiFactors{}
 		//apiResults = Results2.ApiResults{}
 		////------- UseCases
-		//	ucSports  = Sports3.UcSports{}
-		ucEvents = Events3.UcEvents{}
-		//	ucFactors = Factors3.UcFactors{}
+		ucSports  = UcSports.UcSports{}
+		ucEvents  = UcEvents.UcEvents{}
+		ucFactors = UcFactors.UcFactors{}
 		//	ucResults = Results3.UcResults{}
 	)
-	Create.DBStructure(db, logger)
+	dbCreate.DBStructure(db, logger)
 	for {
 		logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
 		fonUrl.JsonToStruct(urls, logger)
 
-		//apiSports.JsonToStruct(urlevents, logger)
-		//ucSports.ReAssign(apiSports)
-
+		// -----Sports ----- //
+		apiSports.JsonToStruct(&fonUrl, logger)
+		ucSports.ReAssign(apiSports)
+		var dbSports = DbSports.DbSports{
+			UcSportsStruct: ucSports.UcSportsStruct,
+		}
+		dbSports.Insert(db, logger)
+		// ----- Events ----- //
 		apiEvents.Parse(&fonUrl, logger)
 		ucEvents.ReAssign(apiEvents)
-		dbEvents := ucEvents.CreateDbVar(logger)
+		var dbEvents = DbEvents.DbEvents{
+			UcEventStruct: ucEvents.UcEventStruct,
+		}
 		dbEvents.Insert(db, logger)
 
-		//apiFactors.JsonToStruct(urlevents, logger)
-		//ucFactors.ReAssign(apiFactors)
+		// ----- Factors ----- //
+		apiFactors.JsonToStruct(&fonUrl, logger)
+		ucFactors.ReAssign(apiFactors)
+		var dbFactors = DbFactors.DbFactors{
+			UcFactorsStruct: ucFactors.UcFactorsStruct,
+		}
+		dbFactors.Insert(db, logger)
 		//apiResults.JsonToStruct(urlresult, logger)
 		//
 		//ucResults.ReAssign(apiResults.Fonbet, logger)

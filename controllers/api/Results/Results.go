@@ -1,4 +1,4 @@
-package Results
+package ApiResults
 
 import (
 	"encoding/json"

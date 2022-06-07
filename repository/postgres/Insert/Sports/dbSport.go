@@ -1,38 +1,34 @@
-package Sports
+package DbSports
 
 import (
-	"Fonbet/controllers/api/Sports"
+	Sports2 "Fonbet/usecases/Sports"
 	"context"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
 )
 
-type DbSports struct {
-	Fonbet Sports.ApiSports
-	Db     *pgxpool.Pool
-}
+type DbSports Sports2.UcSports
 
-func (f DbSports) Insert(logger *logrus.Logger) (err error) {
+func (f *DbSports) Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error) {
 	var (
-		fonbet = f.Fonbet
-		db     = f.Db
-
-		exist = true
-		count = 0
+		fonbet = f.UcSportsStruct
+		exist  = true
+		count  = 0
 	)
+
 	conn, err := db.Acquire(context.Background())
 	if err != nil {
 		logger.Errorf("Failed to Acauire connetcion, err: %v\n", err)
 	}
 
-	for i := 0; i < len(fonbet.Sports); i++ {
-		_ = db.QueryRow(context.Background(), `SELECT exists(Select sportid from sports where sportid = $1);`, fonbet.Sports[i].Id).Scan(&exist)
+	for i := 0; i < len(fonbet); i++ {
+		_ = db.QueryRow(context.Background(), `SELECT exists(Select sportid from sports where sportid = $1);`, fonbet[i].Id).Scan(&exist)
 
-		if exist == false {
-			_, err := conn.Exec(context.Background(), "INSERT INTO sports (sportid, parentid, name) VALUES ($1, $2, $3)", fonbet.Sports[i].Id, fonbet.Sports[i].ParentId, fonbet.Sports[i].Name)
+		if exist != true {
+			_, err := conn.Exec(context.Background(), "INSERT INTO sports (sportid, parentid, name) VALUES ($1, $2, $3)", fonbet[i].Id, fonbet[i].ParentId, fonbet[i].Name)
 
 			if err != nil {
-				logger.Warningf("Unable to Insert into Sports: %v exist:%v  error:%v\n", fonbet.Sports[i].Id, exist, err)
+				logger.Warningf("Unable to Insert into Sports: %v exist:%v  error:%v\n", fonbet[i].Id, exist, err)
 			} else {
 				j := &count
 				*j++
@@ -40,7 +36,7 @@ func (f DbSports) Insert(logger *logrus.Logger) (err error) {
 
 		}
 	}
-	logger.Infof("Total Sports rows in JSON:%v New Sports rows: %v\n", len(fonbet.Sports), count)
+	logger.Infof("Total Sports rows in JSON:%v New Sports rows: %v\n", len(fonbet), count)
 	defer conn.Release()
 	return
 

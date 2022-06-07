@@ -1,7 +1,6 @@
-package Results
+package UcResults
 
 import (
-	"Fonbet/controllers/api/Results"
 	"github.com/sirupsen/logrus"
 	"strconv"
 	"strings"

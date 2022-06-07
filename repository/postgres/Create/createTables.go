@@ -1,4 +1,4 @@
-package Create
+package dbCreate
 
 import (
 	"context"
@@ -33,7 +33,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
     team2id int NOT NULL,
     team1 varchar(50) NULL,
 	team2 varchar(50) NULL,
-	starttime int NOT NULL,
+	starttime timestamp NOT NULL,
     FOREIGN KEY (sportid) References sports (sportid),
 	CONSTRAINT events_pkey PRIMARY KEY (id)
 );
@@ -50,9 +50,9 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 	eventid int NULL UNIQUE,
     sportid int NOT NULL, 
     stringname varchar(100) NOT NULL,
-	team1 int NULL,
-	team2 int NULL,
-	starttime int NOT NULL,
+	team1score int NULL,
+	team2score int NULL,
+	starttime timestamp NOT NULL,
 	score varchar(50) NOT NULL,
     FOREIGN KEY (eventid) References events (id),
     CONSTRAINT result_constraint PRIMARY KEY (stringname, starttime, sportid)

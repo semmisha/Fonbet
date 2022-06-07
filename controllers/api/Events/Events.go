@@ -1,4 +1,4 @@
-package Events
+package ApiEvents
 
 import (
 	"Fonbet/controllers/api"

@@ -1,4 +1,4 @@
-package Connect
+package dbConnect
 
 import (
 	"context"

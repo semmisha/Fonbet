@@ -1,9 +1,7 @@
-package Events
+package UcEvents
 
 import (
-	"Fonbet/controllers/api/Events"
-	Events2 "Fonbet/repository/postgres/Insert/Events"
-	"github.com/sirupsen/logrus"
+	ApiEvents "Fonbet/controllers/api/Events"
 	"time"
 )
 
@@ -22,7 +20,7 @@ type Event struct {
 	StartTime time.Time
 }
 
-func (f *UcEvents) ReAssign(fonbet Events.ApiEvents) {
+func (f *UcEvents) ReAssign(fonbet ApiEvents.ApiEvents) {
 	for i := 0; i < len(fonbet.Events); i++ {
 		if fonbet.Events[i].Team2Id != 0 && fonbet.Events[i].Team1Id != 0 && fonbet.Events[i].Level == 1 {
 
@@ -43,13 +41,4 @@ func (f *UcEvents) ReAssign(fonbet Events.ApiEvents) {
 
 	}
 	//fmt.Println(f)
-}
-
-func (f *UcEvents) CreateDbVar(logger *logrus.Logger) (dbfon Events2.DbEvents) {
-
-	dbfon = Events2.DbEvents{
-		UcEventStruct: f.UcEventStruct,
-	}
-
-	return dbfon
 }
