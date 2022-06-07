@@ -28,8 +28,8 @@ func (f *DbEvents) Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error) {
 		query := fmt.Sprint("SELECT EXISTS(select id from events where id = $1);")
 		_ = conn.QueryRow(context.Background(), query, fonbet[i].Id).Scan(&exist)
 		if exist != true {
-			query2 := fmt.Sprintf("INSERT INTO events (id, sportid, team1id, team2id, team1, team2, starttime) VALUES ($1, $2, $3,$4,$5,$6,$7)")
-			_, err := conn.Exec(context.Background(), query2, fonbet[i].Id, fonbet[i].SportId, fonbet[i].Team1Id, fonbet[i].Team2Id, fonbet[i].Team1, fonbet[i].Team2, fonbet[i].StartTime)
+			query2 := fmt.Sprintf("INSERT INTO events (id, sportid, team1id, team2id, team1, team2, starttime,name) VALUES ($1, $2, $3,$4,$5,$6,$7,$8)")
+			_, err := conn.Exec(context.Background(), query2, fonbet[i].Id, fonbet[i].SportId, fonbet[i].Team1Id, fonbet[i].Team2Id, fonbet[i].Team1, fonbet[i].Team2, fonbet[i].StartTime, fonbet[i].Name)
 
 			if err != nil {
 				logger.Warningf("Unable to Insert: %v error: %v\n", fonbet[i].Id, err)

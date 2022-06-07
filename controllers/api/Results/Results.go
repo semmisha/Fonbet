@@ -1,10 +1,10 @@
 package ApiResults
 
 import (
+	"Fonbet/controllers/api"
 	"encoding/json"
 	"github.com/sirupsen/logrus"
 	"io"
-	"net/http"
 )
 
 type ApiResults struct {
@@ -26,14 +26,10 @@ type ApiResults struct {
 	LineDate int64 `json:"lineDate"`
 }
 
-func (fonbet *ApiResults) JsonToStruct(url string, logger *logrus.Logger) error {
+func (fonbet *ApiResults) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) error {
 
-	request, err := http.Get(url)
-	if err != nil {
-		logger.Errorf("Cant JsonToStruct URL: %v  error: %v", url, err)
-	}
-
-	body, err := io.ReadAll(request.Body)
+	response := api.Carousele(url.Common, "/results/results.json.php?locale=ru")
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		logger.Errorf("Cant ReadALL URL: %v  error: %v", url, err)
 
@@ -42,7 +38,7 @@ func (fonbet *ApiResults) JsonToStruct(url string, logger *logrus.Logger) error 
 	if err != nil {
 		logger.Errorf("Cant Unmarshall URL: %v  error: %v", url, err)
 	}
-	err = request.Body.Close()
+	err = response.Body.Close()
 	if err != nil {
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}

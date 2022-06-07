@@ -1,6 +1,7 @@
 package UcResults
 
 import (
+	ApiResults "Fonbet/controllers/api/Results"
 	"github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
@@ -12,22 +13,22 @@ type UcResults struct {
 }
 
 type Result struct {
-	eventid    int
-	id         int
-	name       string
-	team1Score int
-	team2Score int
-	totalScore string
-	startTime  time.Time
-	sportId    int
+	Eventid    int
+	Id         int
+	Name       string
+	Team1Score int
+	Team2Score int
+	TotalScore string
+	StartTime  time.Time
+	SportId    int
 }
 
-func (f *UcResults) ReAssign(fonbet Results.ApiResults, logger *logrus.Logger) {
+func (f *UcResults) ReAssign(fonbet ApiResults.ApiResults, logger *logrus.Logger) {
 
 	for i := 0; i < len(fonbet.Events); i++ {
 		stringId, err := strconv.Atoi(fonbet.Events[i].Id)
 		if err != nil {
-			logger.Errorf("Cant strconv Atoi, id %v   error: %v\n", fonbet.Events[i].Id, err)
+			logger.Errorf("Cant strconv Atoi, Id %v   error: %v\n", fonbet.Events[i].Id, err)
 		}
 
 		for j := 0; j < len(fonbet.Sections); j++ {
@@ -43,13 +44,13 @@ func (f *UcResults) ReAssign(fonbet Results.ApiResults, logger *logrus.Logger) {
 
 					fontime := time.Unix(int64(fonbet.Events[i].StartTime), 0)
 					g := Result{
-						id:         stringId,
-						name:       fonbet.Events[i].Name,
-						team1Score: resultslice[0],
-						team2Score: resultslice[1],
-						totalScore: fonbet.Events[i].Score,
-						startTime:  fontime,
-						sportId:    fonbet.Sections[j].FonbetCompetitionId,
+						Id:         stringId,
+						Name:       fonbet.Events[i].Name,
+						Team1Score: resultslice[0],
+						Team2Score: resultslice[1],
+						TotalScore: fonbet.Events[i].Score,
+						StartTime:  fontime,
+						SportId:    fonbet.Sections[j].FonbetCompetitionId,
 					}
 
 					f.UcResultsStruct = append(f.UcResultsStruct, g)
