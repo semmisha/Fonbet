@@ -9,14 +9,9 @@ import (
 	"Fonbet/logging"
 	dbConnect "Fonbet/repository/postgres/Connect"
 	dbCreate "Fonbet/repository/postgres/Create"
-	DbEvents "Fonbet/repository/postgres/Insert/Events"
-	DbFactors "Fonbet/repository/postgres/Insert/Factors"
-	DbResults "Fonbet/repository/postgres/Insert/Results"
-	DbSports "Fonbet/repository/postgres/Insert/Sports"
-	UcEvents "Fonbet/usecases/Events"
-	UcFactors "Fonbet/usecases/Factors"
-	UcResults "Fonbet/usecases/Results"
-	UcSports "Fonbet/usecases/Sports"
+	DbEvents "Fonbet/repository/postgres/Manipulate"
+	"Fonbet/usecases/Compare"
+	UcEvents "Fonbet/usecases/Convert"
 	"time"
 )
 
@@ -42,10 +37,10 @@ var (
 	apiResults = ApiResults.ApiResults{}
 
 	//TODO ------- UseCases
-	ucSports  = UcSports.UcSports{}
+	ucSports  = UcEvents.UcSports{}
 	ucEvents  = UcEvents.UcEvents{}
-	ucFactors = UcFactors.UcFactors{}
-	ucResults = UcResults.UcResults{}
+	ucFactors = UcEvents.UcFactors{}
+	ucResults = UcEvents.UcResults{}
 )
 
 func main() {
@@ -58,7 +53,7 @@ func main() {
 		// TODO -----Sports ----- //
 		apiSports.JsonToStruct(&fonUrl, logger)
 		ucSports.ReAssign(apiSports)
-		var dbSports = DbSports.DbSports{
+		var dbSports = DbEvents.DbSports{
 			UcSportsStruct: ucSports.UcSportsStruct,
 		}
 		dbSports.Insert(db, logger)
@@ -74,7 +69,7 @@ func main() {
 		// TODO ----- Factors ----- //
 		apiFactors.JsonToStruct(&fonUrl, logger)
 		ucFactors.ReAssign(apiFactors)
-		var dbFactors = DbFactors.DbFactors{
+		var dbFactors = DbEvents.DbFactors{
 			UcFactorsStruct: ucFactors.UcFactorsStruct,
 		}
 		dbFactors.Insert(db, logger)
@@ -83,13 +78,24 @@ func main() {
 
 		apiResults.JsonToStruct(&fonUrl, logger)
 		ucResults.ReAssign(apiResults, logger)
-		var dbResults = DbResults.DbResults{
+		var dbResults = DbEvents.DbResults{
 			UcResultsStruct: ucResults.UcResultsStruct,
 		}
 		dbResults.Insert(db, logger)
 		// TODO ----- Compare ----- //
 
 		logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))
+
+		var (
+			testEvent  DbEvents.DbEvents
+			testResult DbEvents.DbResults
+		)
+
+		testEvent.Select(db, logger)
+		testResult.Select(db, logger)
+
+		dbResultId := Compare.CompareResult(testEvent, testResult, logger)
+		dbResultId.Update(db, logger)
 		time.Sleep(15 * time.Minute)
 	}
 	db.Close()

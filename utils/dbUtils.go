@@ -15,9 +15,10 @@ func DayCount(url string, day int) (urldate string) {
 }
 
 func Replacer(str string) string {
-	var symbols = [...]string{" ", "-", "–", "(", ")"}
+	var symbols = [...]string{" ", "-", "–", "(", ")", "/", ".", "_"}
 	for _, i := range symbols {
 		str = strings.ReplaceAll(str, i, "")
+		str = strings.ToLower(str)
 	}
 
 	return str

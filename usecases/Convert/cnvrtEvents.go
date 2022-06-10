@@ -1,4 +1,4 @@
-package UcEvents
+package Convert
 
 import (
 	ApiEvents "Fonbet/controllers/api/Events"

@@ -47,7 +47,8 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 	}
 
 	results, err := db.Exec(context.Background(), `CREATE TABLE IF NOT EXISTS results (
-	eventid int NULL UNIQUE,
+	resultid  serial ,
+    eventid int NULL UNIQUE,
     sportid int NOT NULL, 
     stringname varchar(100) NOT NULL,
 	team1score int NULL,
@@ -55,7 +56,7 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 	starttime timestamp NOT NULL,
 	score varchar(50) NOT NULL,
     FOREIGN KEY (eventid) References events (id),
-    CONSTRAINT result_constraint PRIMARY KEY (stringname, starttime, sportid)
+    CONSTRAINT result_constraint PRIMARY KEY (resultid, stringname, starttime, sportid)
 );
 `)
 	if err != nil {

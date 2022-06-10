@@ -1,7 +1,7 @@
-package DbFactors
+package Postgres
 
 import (
-	UcFactors "Fonbet/usecases/Factors"
+	UcFactors "Fonbet/usecases/Convert"
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -32,7 +32,7 @@ func (f *DbFactors) Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error) 
 			query := fmt.Sprintf(`INSERT INTO factors (eventid, "921", "922", "923") Values ( %v, %v , %v, %v )`, fonbet[i].Id, fonbet[i].FrstWn, fonbet[i].Drw, fonbet[i].ScndWn)
 			_, err = conn.Exec(context.Background(), query)
 			if err != nil {
-				logger.Warningf("Unable to Insert factors: %v error: %v", fonbet, err)
+				logger.Warningf("Unable to Manipulate factors: %v error: %v", fonbet, err)
 			} else {
 				j := &count
 				*j++
@@ -47,7 +47,7 @@ func (f *DbFactors) Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error) 
 
 }
 
-func (f *DbFactors) Update() {
+func (f *DbFactors) Select(db *pgxpool.Pool, logger logrus.Logger) {
 	//TODO implement me
 	panic("implement me")
 }

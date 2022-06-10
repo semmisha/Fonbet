@@ -1,12 +1,13 @@
-package postgres
+package Postgres
 
 import (
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
 )
 
 type Database interface {
-	Insert(logger *logrus.Logger) error
-	Update(logger *logrus.Logger)
+	Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error)
+	Select(db *pgxpool.Pool, logger logrus.Logger)
 	Delete()
 }
 

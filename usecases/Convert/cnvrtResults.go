@@ -1,4 +1,4 @@
-package UcResults
+package Convert
 
 import (
 	ApiResults "Fonbet/controllers/api/Results"
@@ -13,8 +13,8 @@ type UcResults struct {
 }
 
 type Result struct {
-	Eventid    int
-	Id         int
+	ResultId   int
+	EventId    int
 	Name       string
 	Team1Score int
 	Team2Score int
@@ -28,7 +28,7 @@ func (f *UcResults) ReAssign(fonbet ApiResults.ApiResults, logger *logrus.Logger
 	for i := 0; i < len(fonbet.Events); i++ {
 		stringId, err := strconv.Atoi(fonbet.Events[i].Id)
 		if err != nil {
-			logger.Errorf("Cant strconv Atoi, Id %v   error: %v\n", fonbet.Events[i].Id, err)
+			logger.Errorf("Cant strconv Atoi, ResultId %v   error: %v\n", fonbet.Events[i].Id, err)
 		}
 
 		for j := 0; j < len(fonbet.Sections); j++ {
@@ -43,8 +43,9 @@ func (f *UcResults) ReAssign(fonbet ApiResults.ApiResults, logger *logrus.Logger
 					}
 
 					fontime := time.Unix(int64(fonbet.Events[i].StartTime), 0)
+
 					g := Result{
-						Id:         stringId,
+						ResultId:   stringId,
 						Name:       fonbet.Events[i].Name,
 						Team1Score: resultslice[0],
 						Team2Score: resultslice[1],
@@ -59,7 +60,7 @@ func (f *UcResults) ReAssign(fonbet ApiResults.ApiResults, logger *logrus.Logger
 			}
 		}
 	}
-	//fmt.Println(f)
+
 }
 
 func Conv(fonbet string) ([]int, error) {
