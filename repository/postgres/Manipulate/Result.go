@@ -53,7 +53,7 @@ func (f *DbResults) Select(db *pgxpool.Pool, logger *logrus.Logger) {
 	if err != nil {
 		logger.Errorf("Failed to Acquire connetcion, err: %v\n", err)
 	}
-	data, _ := conn.Query(context.Background(), "Select resultid, sportid, stringname, starttime from results ")
+	data, _ := conn.Query(context.Background(), "Select resultid, sportid, stringname, starttime from results where eventid is null")
 
 	for data.Next() {
 		err = data.Scan(&fonbet.ResultId, &fonbet.SportId, &fonbet.Name, &fonbet.StartTime)
@@ -67,7 +67,7 @@ func (f *DbResults) Select(db *pgxpool.Pool, logger *logrus.Logger) {
 	}
 
 	defer conn.Release()
-	logger.Infof("Total Events from DB: %v\n", count)
+	logger.Infof("Total Results from DB: %v\n", count)
 	return
 }
 

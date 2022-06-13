@@ -19,6 +19,7 @@ func Replacer(str string) string {
 	for _, i := range symbols {
 		str = strings.ReplaceAll(str, i, "")
 		str = strings.ToLower(str)
+		str = strings.TrimSpace(str)
 	}
 
 	return str

@@ -26,12 +26,15 @@ func CompareResult(events DbEvents, result DbResults, logger *logrus.Logger) DbR
 
 				count++
 
+			} else {
+
+				//fmt.Println(resultString, eventString)
+
 			}
 
 		}
 
 	}
-
 	logger.Infof("New copmare entries: %v\n", count)
 	return returnResult
 }
