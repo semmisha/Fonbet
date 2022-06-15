@@ -7,6 +7,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 type DbEvents UcEvents.UcEvents
@@ -55,7 +56,9 @@ func (f *DbEvents) Select(db *pgxpool.Pool, logger *logrus.Logger) {
 	if err != nil {
 		logger.Errorf("Failed to Acquire connetcion, err: %v\n", err)
 	}
-	data, _ := conn.Query(context.Background(), "Select id, team1, team2, starttime, sportid from events ")
+	Timer := time.Now().Add(-6 * time.Hour)
+
+	data, _ := conn.Query(context.Background(), "Select id, team1, team2, starttime, sportid from events where starttime > $1 and starttime < $2 ", Timer, time.Now())
 
 	for data.Next() {
 		err = data.Scan(&fonbet.Id, &fonbet.Team1, &fonbet.Team2, &fonbet.StartTime, &fonbet.SportId)

@@ -9,7 +9,7 @@ func Carousele(url []string, extension string) *http.Response {
 
 	for _, i := range url {
 		i = fmt.Sprint("https:", i, extension)
-		fmt.Println(i)
+		//fmt.Println(i)
 		request, err := http.Get(i)
 		if err == nil {
 			return request

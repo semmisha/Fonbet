@@ -10,9 +10,3 @@ type Database interface {
 	Select(db *pgxpool.Pool, logger logrus.Logger)
 	Delete()
 }
-
-type DbMaintenance interface {
-	Connect()
-	CreateTables()
-	Close()
-}

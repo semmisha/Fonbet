@@ -26,8 +26,8 @@ const urls = "https://www.fon.bet/urls.json"
 
 var (
 	//TODO ------- Main
-	logger = logging.Logger()
-	db     = dbConnect.Connect(&dbConf, logger)
+	Logger = logging.Logger()
+	db     = dbConnect.Connect(&dbConf, Logger)
 
 	//TODO ------- JsonToStruct
 	fonUrl     = api.ListURLStruct{}
@@ -45,62 +45,59 @@ var (
 
 func main() {
 
-	dbCreate.DBStructure(db, logger)
+	dbCreate.DBStructure(db, Logger)
 	for {
-		logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
-		fonUrl.JsonToStruct(urls, logger)
+		Logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
+		fonUrl.JsonToStruct(urls, Logger)
 
-		go func() {
-			time.Sleep(1 * time.Minute)
-			// TODO -----Sports ----- //
-			apiSports.JsonToStruct(&fonUrl, logger)
-			ucSports.ReAssign(apiSports)
-			var dbSports = DbEvents.DbSports{
-				UcSportsStruct: ucSports.UcSportsStruct,
-			}
-			dbSports.Insert(db, logger)
+		// TODO -----Sports ----- //
+		apiSports.JsonToStruct(&fonUrl, Logger)
+		ucSports.ReAssign(apiSports)
+		var dbSports = DbEvents.DbSports{
+			UcSportsStruct: ucSports.UcSportsStruct,
+		}
+		dbSports.Insert(db, Logger)
 
-			// TODO ----- Events ----- //
-			apiEvents.Parse(&fonUrl, logger)
-			ucEvents.ReAssign(apiEvents)
-			var dbEvents = DbEvents.DbEvents{
-				UcEventStruct: ucEvents.UcEventStruct,
-			}
-			dbEvents.Insert(db, logger)
+		// TODO ----- Events ----- //
+		apiEvents.Parse(&fonUrl, Logger)
+		ucEvents.ReAssign(apiEvents)
+		var dbEvents = DbEvents.DbEvents{
+			UcEventStruct: ucEvents.UcEventStruct,
+		}
+		dbEvents.Insert(db, Logger)
 
-			// TODO ----- Factors ----- //
-			apiFactors.JsonToStruct(&fonUrl, logger)
-			ucFactors.ReAssign(apiFactors)
-			var dbFactors = DbEvents.DbFactors{
-				UcFactorsStruct: ucFactors.UcFactorsStruct,
-			}
-			dbFactors.Insert(db, logger)
+		// TODO ----- Factors ----- //
+		apiFactors.JsonToStruct(&fonUrl, Logger)
+		ucFactors.ReAssign(apiFactors)
+		var dbFactors = DbEvents.DbFactors{
+			UcFactorsStruct: ucFactors.UcFactorsStruct,
+		}
+		dbFactors.Insert(db, Logger)
 
-			// TODO ----- Results ----- //
+		// TODO ----- Results ----- //
 
-			apiResults.JsonToStruct(&fonUrl, logger)
-			ucResults.ReAssign(apiResults, logger)
-			var dbResults = DbEvents.DbResults{
-				UcResultsStruct: ucResults.UcResultsStruct,
-			}
-			dbResults.Insert(db, logger)
+		apiResults.JsonToStruct(&fonUrl, Logger)
+		ucResults.ReAssign(apiResults, Logger)
+		var dbResults = DbEvents.DbResults{
+			UcResultsStruct: ucResults.UcResultsStruct,
+		}
+		dbResults.Insert(db, Logger)
 
-			logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))
-		}()
+		Logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))
+
 		// TODO ----- Compare ----- //
-		go func() {
-			var (
-				testEvent  DbEvents.DbEvents
-				testResult DbEvents.DbResults
-			)
 
-			testEvent.Select(db, logger)
-			testResult.Select(db, logger)
+		var (
+			testEvent  DbEvents.DbEvents
+			testResult DbEvents.DbResults
+		)
 
-			dbResultId := Compare.CompareResult(testEvent, testResult, logger)
-			dbResultId.Update(db, logger)
+		testEvent.Select(db, Logger)
+		testResult.Select(db, Logger)
 
-		}()
+		dbResultId := Compare.CompareResult(testEvent, testResult, Logger)
+		dbResultId.Update(db, Logger)
+
 		time.Sleep(15 * time.Minute)
 
 	}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 type DbResults UcResults.UcResults
@@ -53,7 +54,8 @@ func (f *DbResults) Select(db *pgxpool.Pool, logger *logrus.Logger) {
 	if err != nil {
 		logger.Errorf("Failed to Acquire connetcion, err: %v\n", err)
 	}
-	data, _ := conn.Query(context.Background(), "Select resultid, sportid, stringname, starttime from results where eventid is null")
+	Timer := time.Now().Add(-6 * time.Hour)
+	data, _ := conn.Query(context.Background(), "Select resultid, sportid, stringname, starttime from results where eventid is null and starttime > $1", Timer)
 
 	for data.Next() {
 		err = data.Scan(&fonbet.ResultId, &fonbet.SportId, &fonbet.Name, &fonbet.StartTime)
@@ -89,7 +91,7 @@ func (f *DbResults) Update(db *pgxpool.Pool, logger *logrus.Logger) {
 		query := fmt.Sprint("Update results set eventid = $1 where resultid = $2")
 		_, err = conn.Exec(context.Background(), query, i.EventId, i.ResultId)
 		if err != nil {
-			logger.Warningf("Unable to update result, entry:%v error:%v\n", i.ResultId, err)
+			logger.Warningf("Unable to update result, ResultId:%v EventId:%v error:%v\n", i.ResultId, i.EventId, err)
 
 		} else {
 			count++

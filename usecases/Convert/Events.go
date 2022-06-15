@@ -22,7 +22,7 @@ type Event struct {
 
 func (f *UcEvents) ReAssign(fonbet ApiEvents.ApiEvents) {
 	for i := 0; i < len(fonbet.Events); i++ {
-		if fonbet.Events[i].Team2Id != 0 && fonbet.Events[i].Team1Id != 0 && fonbet.Events[i].Level == 1 && (fonbet.Events[i].SportId < 71000 || fonbet.Events[i].SportId > 79000) {
+		if fonbet.Events[i].Team2Id != 0 && fonbet.Events[i].Team1Id != 0 && fonbet.Events[i].Level == 1 {
 
 			fontime := time.Unix(int64(fonbet.Events[i].StartTime), 0)
 			j := Event{

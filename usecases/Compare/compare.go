@@ -19,7 +19,7 @@ func CompareResult(events DbEvents, result DbResults, logger *logrus.Logger) DbR
 		for _, j := range events.UcEventStruct {
 
 			eventString := utils.Replacer(fmt.Sprint(j.Team1, j.Team2))
-			if resultString == eventString && i.SportId == j.SportId && i.StartTime == j.StartTime && i.EventId == 0 {
+			if resultString == eventString && i.SportId == j.SportId {
 				i.EventId = j.Id
 
 				returnResult.UcResultsStruct = append(returnResult.UcResultsStruct, i)

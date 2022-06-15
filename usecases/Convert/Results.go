@@ -34,7 +34,7 @@ func (f *UcResults) ReAssign(fonbet ApiResults.ApiResults, logger *logrus.Logger
 		for j := 0; j < len(fonbet.Sections); j++ {
 			for b := 0; b < len(fonbet.Sections[j].Events); b++ {
 
-				if fonbet.Sections[j].Events[b] == stringId && strings.ContainsAny(fonbet.Events[i].Name, "-––") && fonbet.Events[i].Status == 3 && strings.Contains(fonbet.Events[i].Name, "очковые") && (fonbet.Sections[j].FonbetCompetitionId < 71000 || fonbet.Sections[j].FonbetCompetitionId > 79000) {
+				if fonbet.Sections[j].Events[b] == stringId && strings.ContainsAny(fonbet.Events[i].Name, "-––") && fonbet.Events[i].Status == 3 {
 
 					resultslice, err := Conv(fonbet.Events[i].Score)
 					if err != nil {
