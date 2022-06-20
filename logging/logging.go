@@ -31,11 +31,11 @@ func Logger() (logger *logrus.Logger) {
 
 		},
 	})
-	//file, err := os.OpenFile("logs.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
-	//if err != nil {
-	//	logger.Errorf("Unable to Create/open file: %v", file.Name())
-	//}
+	file, err := os.OpenFile("/app/logging/logs.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
+	if err != nil {
+		logger.Errorf("Unable to Create/open file: %v", file.Name())
+	}
 
-	logger.Out = io.MultiWriter(os.Stdout)
+	logger.Out = io.MultiWriter(os.Stdout, file)
 	return
 }

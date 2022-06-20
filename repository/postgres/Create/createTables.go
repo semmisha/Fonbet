@@ -85,9 +85,10 @@ func DBStructure(db *pgxpool.Pool, logger *logrus.Logger) func() {
 	}
 
 	view, err := db.Exec(context.Background(), `
-CREATE OR REPLACE VIEW public.orange
+	CREATE OR REPLACE VIEW public.orange
 AS SELECT e.id,
     e.sportid,
+    s.parentid,
     s.name,
     e.team1id,
     e.team2id,
@@ -104,7 +105,7 @@ AS SELECT e.id,
      JOIN results r ON e.id = r.eventid
      JOIN factors f ON e.id = f.eventid
      LEFT JOIN sports s ON e.sportid = s.sportid;
-`)
+	`)
 	if err != nil {
 		logger.WithFields(logrus.Fields{
 			"message":     "cant Create view",
@@ -113,11 +114,10 @@ AS SELECT e.id,
 
 	}
 
-	viewpredict, err := db.Exec(context.Background(), `-- public.orangepredict source
-
-CREATE OR REPLACE VIEW public.orangepredict
+	viewpredict, err := db.Exec(context.Background(), `CREATE OR REPLACE VIEW public.orangepredict
 AS SELECT e.id,
     e.sportid,
+    s.parentid,
     s.name,
     e.team1id,
     e.team2id,
@@ -131,7 +131,7 @@ AS SELECT e.id,
      LEFT JOIN factors f ON e.id = f.eventid
      LEFT JOIN sports s ON e.sportid = s.sportid
   WHERE e.starttime > CURRENT_TIMESTAMP;
-`)
+	`)
 	if err != nil {
 		logger.WithFields(logrus.Fields{
 			"message":     "cant Create viewpredict",

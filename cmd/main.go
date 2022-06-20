@@ -28,25 +28,26 @@ var (
 	//TODO ------- Main
 	Logger = logging.Logger()
 	db     = dbConnect.Connect(&dbConf, Logger)
-
-	//TODO ------- JsonToStruct
-	fonUrl     = api.ListURLStruct{}
-	apiSports  = ApiSports.ApiSports{}
-	apiEvents  = ApiEvents.ApiEvents{}
-	apiFactors = Factors2.ApiFactors{}
-	apiResults = ApiResults.ApiResults{}
-
-	//TODO ------- UseCases
-	ucSports  = UcEvents.UcSports{}
-	ucEvents  = UcEvents.UcEvents{}
-	ucFactors = UcEvents.UcFactors{}
-	ucResults = UcEvents.UcResults{}
 )
 
 func main() {
 
 	dbCreate.DBStructure(db, Logger)
 	for {
+		//TODO ------- JsonToStruct
+		var (
+			fonUrl     = api.ListURLStruct{}
+			apiSports  = ApiSports.ApiSports{}
+			apiEvents  = ApiEvents.ApiEvents{}
+			apiFactors = Factors2.ApiFactors{}
+			apiResults = ApiResults.ApiResults{}
+
+			//TODO ------- UseCases
+			ucSports  = UcEvents.UcSports{}
+			ucEvents  = UcEvents.UcEvents{}
+			ucFactors = UcEvents.UcFactors{}
+			ucResults = UcEvents.UcResults{}
+		)
 		Logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
 		fonUrl.JsonToStruct(urls, Logger)
 
