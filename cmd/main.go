@@ -99,7 +99,7 @@ func main() {
 		dbResultId := Compare.CompareResult(testEvent, testResult, Logger)
 		dbResultId.Update(db, Logger)
 
-		time.Sleep(15 * time.Minute)
+		time.Sleep(20 * time.Minute)
 
 	}
 	db.Close()
