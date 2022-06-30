@@ -2,9 +2,11 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
+	"time"
 )
 
 type ListURLStruct struct {
@@ -25,24 +27,29 @@ type ListURLStruct struct {
 }
 
 func (fonbet *ListURLStruct) JsonToStruct(url string, logger *logrus.Logger) error {
+	for i := 0; i < 5; i++ {
+		request, err := http.Get(url)
+		if err != nil {
+			logger.Errorf("Cant JsonToStruct URL: %v  error: %v", url, err)
+		}
 
-	request, err := http.Get(url)
-	if err != nil {
-		logger.Errorf("Cant JsonToStruct URL: %v  error: %v", url, err)
-	}
+		body, err := io.ReadAll(request.Body)
+		if err != nil {
+			logger.Errorf("Cant ReadALL URL: %v  error: %v", url, err)
 
-	body, err := io.ReadAll(request.Body)
-	if err != nil {
-		logger.Errorf("Cant ReadALL URL: %v  error: %v", url, err)
-
+		}
+		err = json.Unmarshal(body, &fonbet)
+		if err != nil {
+			logger.Errorf("Cant Unmarshall URL: %v  error: %v", url, err)
+		}
+		err = request.Body.Close()
+		if err != nil {
+			logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
+		}
+		if err == nil {
+			return nil
+		}
+		time.Sleep(3 * time.Minute)
 	}
-	err = json.Unmarshal(body, &fonbet)
-	if err != nil {
-		logger.Errorf("Cant Unmarshall URL: %v  error: %v", url, err)
-	}
-	err = request.Body.Close()
-	if err != nil {
-		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
-	}
-	return err
+	return errors.New("Failed to parse list of URLs")
 }

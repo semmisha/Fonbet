@@ -31,7 +31,7 @@ func Logger() (logger *logrus.Logger) {
 
 		},
 	})
-	file, err := os.OpenFile("/app/logging/logs.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
+	file, err := os.OpenFile("logs.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
 	if err != nil {
 		logger.Errorf("Unable to Create/open file: %v", file.Name())
 	}

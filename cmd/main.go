@@ -77,7 +77,10 @@ func main() {
 
 		// TODO ----- Results ----- //
 
-		apiResults.JsonToStruct(&fonUrl, Logger)
+		err := apiResults.JsonToStruct(&fonUrl, Logger)
+		if err != nil {
+			Logger.Error(err)
+		}
 		ucResults.ReAssign(apiResults, Logger)
 		var dbResults = DbEvents.DbResults{
 			UcResultsStruct: ucResults.UcResultsStruct,
@@ -89,14 +92,14 @@ func main() {
 		// TODO ----- Compare ----- //
 
 		var (
-			testEvent  DbEvents.DbEvents
-			testResult DbEvents.DbResults
+			compareEvent  DbEvents.DbEvents
+			compareResult DbEvents.DbResults
 		)
 
-		testEvent.Select(db, Logger)
-		testResult.Select(db, Logger)
+		compareEvent.Select(db, Logger)
+		compareResult.Select(db, Logger)
 
-		dbResultId := Compare.CompareResult(testEvent, testResult, Logger)
+		dbResultId := Compare.CompareResult(compareEvent, compareResult, Logger)
 		dbResultId.Update(db, Logger)
 
 		time.Sleep(20 * time.Minute)
