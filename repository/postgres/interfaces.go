@@ -6,7 +6,7 @@ import (
 )
 
 type Database interface {
-	Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error)
-	Select(db *pgxpool.Pool, logger logrus.Logger)
+	Insert(db *pgxpool.Pool, logger *logrus.Logger)
+	Select(db *pgxpool.Pool, logger *logrus.Logger)
 	Delete()
 }

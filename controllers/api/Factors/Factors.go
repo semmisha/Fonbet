@@ -20,7 +20,11 @@ type ApiFactors struct {
 	} `json:"customFactors"`
 }
 
-func (fonbet *ApiFactors) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) error {
+func NewApiFactors() *ApiFactors {
+	return &ApiFactors{}
+}
+
+func (fonbet *ApiFactors) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) {
 
 	response := api.Carousele(url.LineDesktop, "/events/list")
 
@@ -37,5 +41,5 @@ func (fonbet *ApiFactors) JsonToStruct(url *api.ListURLStruct, logger *logrus.Lo
 	if err != nil {
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}
-	return err
+
 }

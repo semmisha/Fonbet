@@ -24,52 +24,54 @@ var dbConf = dbConnect.DBClient{
 
 const urls = "https://www.fon.bet/urls.json"
 
-var (
-	//TODO ------- Main
-	Logger = logging.Logger()
-	db     = dbConnect.Connect(&dbConf, Logger)
-)
-
 func main() {
-
+	var (
+		//TODO ------- Main
+		Logger = logging.Logger()
+		db     = dbConnect.Connect(&dbConf, Logger)
+	)
 	dbCreate.DBStructure(db, Logger)
 	for {
 		//TODO ------- JsonToStruct
 		var (
-			fonUrl     = api.ListURLStruct{}
-			apiSports  = ApiSports.ApiSports{}
-			apiEvents  = ApiEvents.ApiEvents{}
-			apiFactors = Factors2.ApiFactors{}
-			apiResults = ApiResults.ApiResults{}
+			fonUrl     = api.NewListURLStruct()
+			apiSports  = ApiSports.NewApiSports()
+			apiEvents  = ApiEvents.NewApiEvents()
+			apiFactors = Factors2.NewApiFactors()
+			apiResults = ApiResults.NewApiResults()
 
 			//TODO ------- UseCases
-			ucSports  = UcEvents.UcSports{}
-			ucEvents  = UcEvents.UcEvents{}
-			ucFactors = UcEvents.UcFactors{}
-			ucResults = UcEvents.UcResults{}
+			ucSports  = UcEvents.NewUcSports()
+			ucEvents  = UcEvents.NewUcEvents()
+			ucFactors = UcEvents.NewUcFactors()
+			ucResults = UcEvents.NewUcResults()
 		)
+
 		Logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
-		fonUrl.JsonToStruct(urls, Logger)
+		err := fonUrl.JsonToStruct(urls, Logger)
+		if err != nil {
+			Logger.Fatalf("Cant retieve List of APi after 5 retries, error:%v", err)
+		}
 
 		// TODO -----Sports ----- //
-		apiSports.JsonToStruct(&fonUrl, Logger)
-		ucSports.ReAssign(apiSports)
+		apiSports.JsonToStruct(fonUrl, Logger)
+		ucSports.ReAssign(*apiSports)
 		var dbSports = DbEvents.DbSports{
 			UcSportsStruct: ucSports.UcSportsStruct,
 		}
 		dbSports.Insert(db, Logger)
 
 		// TODO ----- Events ----- //
-		apiEvents.Parse(&fonUrl, Logger)
-		ucEvents.ReAssign(apiEvents)
+		apiEvents.Parse(fonUrl, Logger)
+		ucEvents.ReAssign(*apiEvents)
 		var dbEvents = DbEvents.DbEvents{
 			UcEventStruct: ucEvents.UcEventStruct,
 		}
 		dbEvents.Insert(db, Logger)
 
 		// TODO ----- Factors ----- //
-		apiFactors.JsonToStruct(&fonUrl, Logger)
-		ucFactors.ReAssign(apiFactors)
+		apiFactors.JsonToStruct(fonUrl, Logger)
+		ucFactors.ReAssign(*apiFactors)
 		var dbFactors = DbEvents.DbFactors{
 			UcFactorsStruct: ucFactors.UcFactorsStruct,
 		}
@@ -77,11 +79,9 @@ func main() {
 
 		// TODO ----- Results ----- //
 
-		err := apiResults.JsonToStruct(&fonUrl, Logger)
-		if err != nil {
-			Logger.Error(err)
-		}
-		ucResults.ReAssign(apiResults, Logger)
+		apiResults.JsonToStruct(fonUrl, Logger)
+
+		ucResults.ReAssign(*apiResults, Logger)
 		var dbResults = DbEvents.DbResults{
 			UcResultsStruct: ucResults.UcResultsStruct,
 		}
@@ -105,6 +105,5 @@ func main() {
 		time.Sleep(20 * time.Minute)
 
 	}
-	db.Close()
 
 }

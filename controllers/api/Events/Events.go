@@ -29,7 +29,11 @@ type ApiEvents struct {
 	} `json:"events"`
 }
 
-func (fonbet *ApiEvents) Parse(url *api.ListURLStruct, logger *logrus.Logger) error {
+func NewApiEvents() *ApiEvents {
+	return &ApiEvents{}
+}
+
+func (fonbet *ApiEvents) Parse(url *api.ListURLStruct, logger *logrus.Logger) {
 	response := api.Carousele(url.LineDesktop, "/events/list")
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
@@ -44,5 +48,5 @@ func (fonbet *ApiEvents) Parse(url *api.ListURLStruct, logger *logrus.Logger) er
 	if err != nil {
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}
-	return err
+
 }

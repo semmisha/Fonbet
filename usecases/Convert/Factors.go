@@ -6,6 +6,10 @@ type UcFactors struct {
 	UcFactorsStruct []Factor
 }
 
+func NewUcFactors() *UcFactors {
+	return &UcFactors{}
+}
+
 type Factor struct {
 	Id     int
 	FrstWn float64

@@ -9,6 +9,10 @@ type UcEvents struct {
 	UcEventStruct []Event
 }
 
+func NewUcEvents() *UcEvents {
+	return &UcEvents{}
+}
+
 type Event struct {
 	Id        int
 	SportId   int

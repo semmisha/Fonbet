@@ -19,7 +19,11 @@ type ApiSports struct {
 	} `json:"sports"`
 }
 
-func (fonbet *ApiSports) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) error {
+func NewApiSports() *ApiSports {
+	return &ApiSports{}
+}
+
+func (fonbet *ApiSports) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) {
 
 	response := api.Carousele(url.LineDesktop, "/events/list")
 
@@ -36,5 +40,5 @@ func (fonbet *ApiSports) JsonToStruct(url *api.ListURLStruct, logger *logrus.Log
 	if err != nil {
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}
-	return err
+
 }

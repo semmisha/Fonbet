@@ -12,6 +12,10 @@ type UcResults struct {
 	UcResultsStruct []Result
 }
 
+func NewUcResults() *UcResults {
+	return &UcResults{}
+}
+
 type Result struct {
 	ResultId   int
 	EventId    int
@@ -38,7 +42,7 @@ func (f *UcResults) ReAssign(fonbet ApiResults.ApiResults, logger *logrus.Logger
 
 					resultslice, err := Conv(fonbet.Events[i].Score)
 					if err != nil {
-						logger.Errorf("Unable to convert Result, error:", err)
+						logger.Errorf("\nUnable to convert Result, error:%v\n", err)
 
 					}
 

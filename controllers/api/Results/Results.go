@@ -26,7 +26,11 @@ type ApiResults struct {
 	LineDate int64 `json:"lineDate"`
 }
 
-func (fonbet *ApiResults) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) error {
+func NewApiResults() *ApiResults {
+	return &ApiResults{}
+}
+
+func (fonbet *ApiResults) JsonToStruct(url *api.ListURLStruct, logger *logrus.Logger) {
 
 	response := api.Carousele(url.Common, "/results/results.json.php?locale=ru")
 	body, err := io.ReadAll(response.Body)
@@ -43,5 +47,4 @@ func (fonbet *ApiResults) JsonToStruct(url *api.ListURLStruct, logger *logrus.Lo
 		logger.Errorf("Unable to close body URL: %v  error: %v", url, err)
 	}
 
-	return err
 }

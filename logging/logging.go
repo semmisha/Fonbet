@@ -27,7 +27,7 @@ func Logger() (logger *logrus.Logger) {
 		FieldMap:                  nil,
 		CallerPrettyfier: func(frm *runtime.Frame) (function string, file string) {
 			file = path.Base(frm.File)
-			return fmt.Sprintf("%s", frm.Function), fmt.Sprintf("file:%v , line:%v", file, frm.Line)
+			return frm.Function, fmt.Sprintf("file:%v , line:%v", file, frm.Line)
 
 		},
 	})

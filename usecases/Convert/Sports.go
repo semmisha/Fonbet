@@ -6,6 +6,10 @@ type UcSports struct {
 	UcSportsStruct []Sport
 }
 
+func NewUcSports() *UcSports {
+	return &UcSports{}
+}
+
 type Sport struct {
 	Id       int
 	ParentId int

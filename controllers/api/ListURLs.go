@@ -26,6 +26,10 @@ type ListURLStruct struct {
 	Statistic        string   `json:"statistic"`
 }
 
+func NewListURLStruct() *ListURLStruct {
+	return &ListURLStruct{}
+}
+
 func (fonbet *ListURLStruct) JsonToStruct(url string, logger *logrus.Logger) error {
 	for i := 0; i < 5; i++ {
 		request, err := http.Get(url)

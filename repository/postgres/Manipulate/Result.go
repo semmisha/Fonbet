@@ -3,7 +3,6 @@ package Postgres
 import (
 	UcResults "Fonbet/usecases/Convert"
 	"context"
-	"fmt"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
 	"time"
@@ -11,7 +10,7 @@ import (
 
 type DbResults UcResults.UcResults
 
-func (f *DbResults) Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error) {
+func (f *DbResults) Insert(db *pgxpool.Pool, logger *logrus.Logger) {
 
 	var (
 		fonbet = f.UcResultsStruct
@@ -20,14 +19,17 @@ func (f *DbResults) Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error) 
 		count = 0
 	)
 	conn, err := db.Acquire(context.Background())
+	if err != nil {
+		logger.Errorf("Unable to acuire DB connection, error: %v", err)
 
+	}
 	for i := 0; i < len(fonbet); i++ {
 
-		query := fmt.Sprintf(`SELECT EXISTS(Select stringname from results where stringname=$1 and starttime = $2 and sportid= $3);`)
+		query := `SELECT EXISTS(Select stringname from results where stringname=$1 and starttime = $2 and sportid= $3);`
 
 		_ = conn.QueryRow(context.Background(), query, fonbet[i].Name, fonbet[i].StartTime, fonbet[i].SportId).Scan(&exist)
 
-		if exist != true {
+		if !exist {
 			_, err = conn.Exec(context.Background(), "INSERT INTO results (stringname, starttime, score,team1score,team2score,sportid) VALUES ($1, $2, $3, $4, $5,$6)", fonbet[i].Name, fonbet[i].StartTime, fonbet[i].TotalScore, fonbet[i].Team1Score, fonbet[i].Team2Score, fonbet[i].SportId)
 
 			if err != nil {
@@ -42,7 +44,7 @@ func (f *DbResults) Insert(db *pgxpool.Pool, logger *logrus.Logger) (err error) 
 
 	logger.Infof("Total Result rows in JSON:%v New Result rows: %v\n", len(fonbet), count)
 	defer conn.Release()
-	return
+
 }
 
 func (f *DbResults) Select(db *pgxpool.Pool, logger *logrus.Logger) {
@@ -70,7 +72,7 @@ func (f *DbResults) Select(db *pgxpool.Pool, logger *logrus.Logger) {
 
 	defer conn.Release()
 	logger.Infof("Total Results from DB: %v\n", count)
-	return
+
 }
 
 func (f *DbResults) Update(db *pgxpool.Pool, logger *logrus.Logger) {
@@ -88,7 +90,7 @@ func (f *DbResults) Update(db *pgxpool.Pool, logger *logrus.Logger) {
 	}
 
 	for _, i := range fonbet {
-		query := fmt.Sprint("Update results set eventid = $1 where resultid = $2")
+		query := "Update results set eventid = $1 where resultid = $2"
 		_, err = conn.Exec(context.Background(), query, i.EventId, i.ResultId)
 		if err != nil {
 			logger.Warningf("Unable to update result, ResultId:%v EventId:%v error:%v\n", i.ResultId, i.EventId, err)
@@ -100,7 +102,6 @@ func (f *DbResults) Update(db *pgxpool.Pool, logger *logrus.Logger) {
 
 	logger.Infof("Total Updated Result rows count: %v\n", count)
 	defer conn.Release()
-	return
 
 }
 
