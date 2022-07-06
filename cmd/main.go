@@ -46,7 +46,6 @@ func main() {
 			ucFactors = UcEvents.NewUcFactors()
 			ucResults = UcEvents.NewUcResults()
 		)
-
 		Logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
 		err := fonUrl.JsonToStruct(urls, Logger)
 		if err != nil {
@@ -80,13 +79,11 @@ func main() {
 		// TODO ----- Results ----- //
 
 		apiResults.JsonToStruct(fonUrl, Logger)
-
 		ucResults.ReAssign(*apiResults, Logger)
 		var dbResults = DbEvents.DbResults{
 			UcResultsStruct: ucResults.UcResultsStruct,
 		}
 		dbResults.Insert(db, Logger)
-
 		Logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))
 
 		// TODO ----- Compare ----- //
@@ -95,12 +92,12 @@ func main() {
 			compareEvent  DbEvents.DbEvents
 			compareResult DbEvents.DbResults
 		)
-
 		compareEvent.Select(db, Logger)
 		compareResult.Select(db, Logger)
-
 		dbResultId := Compare.CompareResult(compareEvent, compareResult, Logger)
 		dbResultId.Update(db, Logger)
+
+		//TODO ---- Sleep ----- //
 
 		time.Sleep(20 * time.Minute)
 
