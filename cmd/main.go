@@ -84,7 +84,6 @@ func main() {
 			UcResultsStruct: ucResults.UcResultsStruct,
 		}
 		dbResults.Insert(db, Logger)
-		Logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))
 
 		// TODO ----- Compare ----- //
 
@@ -96,6 +95,8 @@ func main() {
 		compareResult.Select(db, Logger)
 		dbResultId := Compare.CompareResult(compareEvent, compareResult, Logger)
 		dbResultId.Update(db, Logger)
+
+		Logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))
 
 		//TODO ---- Sleep ----- //
 
