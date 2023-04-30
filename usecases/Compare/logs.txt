@@ -1,0 +1,2 @@
+[36mINFO[0m[0000]file:compare.go , line:38 Fonbet/usecases/Compare.CompareResult New copmare entries: 1                       
+[36mINFO[0m[0000]file:compare.go , line:38 Fonbet/usecases/Compare.CompareResult New copmare entries: 1                       

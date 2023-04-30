@@ -2,7 +2,9 @@ package api
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
+	"time"
 )
 
 func Carousele(url []string, extension string) *http.Response {
@@ -18,4 +20,9 @@ func Carousele(url []string, extension string) *http.Response {
 		}
 	}
 	return nil
+}
+
+func RandomNum(num int) int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(num)
 }

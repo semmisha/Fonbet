@@ -17,14 +17,16 @@ import (
 
 var dbConf = dbConnect.DBClient{
 	User:     "postgres",
-	Password: "P@ssw0rd",
-	Host:     "172.16.14.67",
+	Password: "password",
+	Host:     "localhost",
 	Port:     "5432",
 	Dbname:   "postgres"}
 
 const urls = "https://www.fon.bet/urls.json"
+const urlsfile = "data"
 
 func main() {
+
 	var (
 		//TODO ------- Main
 		Logger = logging.Logger()
@@ -47,7 +49,7 @@ func main() {
 			ucResults = UcEvents.NewUcResults()
 		)
 		Logger.Println("|-------Start-------| Time:", time.Now().Format(time.RFC3339))
-		err := fonUrl.JsonToStruct(urls, Logger)
+		err := fonUrl.FileToStruct(urlsfile, Logger)
 		if err != nil {
 			Logger.Fatalf("Cant retieve List of APi after 5 retries, error:%v", err)
 		}
@@ -99,8 +101,9 @@ func main() {
 		Logger.Println("|-------Done-------| Time:", time.Now().Format(time.RFC3339))
 
 		//TODO ---- Sleep ----- //
-
-		time.Sleep(20 * time.Minute)
+		timeSleep := api.RandomNum(40)
+		Logger.Infof("Sleep for %v minutes", timeSleep)
+		time.Sleep(time.Duration(timeSleep) * time.Minute)
 
 	}
 

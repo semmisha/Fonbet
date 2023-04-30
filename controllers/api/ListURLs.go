@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/sirupsen/logrus"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -51,4 +52,19 @@ func (fonbet *ListURLStruct) JsonToStruct(url string, logger *logrus.Logger) err
 		time.Sleep(3 * time.Minute)
 	}
 	return errors.New("Unable to retrieve list of URL's")
+}
+
+func (fonbet *ListURLStruct) FileToStruct(file string, logger *logrus.Logger) error {
+
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		logger.Error("unable to read file")
+	}
+
+	if err != nil {
+		logger.Error(err)
+	}
+	err = json.Unmarshal(data, &fonbet)
+
+	return nil
 }

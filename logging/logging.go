@@ -35,10 +35,10 @@ func Logger() (logger *logrus.Logger) {
 	logger.SetOutput(io.Discard)
 
 	tlgWriter := ClientAPI.NewConnection("@test111_111", "http://172.16.14.67:9999/PostMessage")
-	file, err := os.OpenFile("/app/logging/logs.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
-	if err != nil {
-		logger.Error("Unable to Create/open file:", file.Name())
-	}
+	//file, err := os.OpenFile("/app/logging/logs.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
+	//if err != nil {
+	//	logger.Warn("Unable to Create/open file:", file.Name())
+	//}
 
 	logger.AddHook(&writer.Hook{
 		Writer:    os.Stdout,

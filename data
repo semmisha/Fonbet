@@ -1,0 +1,67 @@
+{
+  "common": [
+    "//clientsapi01w.bk6bba-resources.com",
+    "//clientsapi04w.bk6bba-resources.com",
+    "//clientsapi31w.bk6bba-resources.com",
+    "//clientsapi51w.bk6bba-resources.com",
+    "//clientsapi52w.bk6bba-resources.com"
+
+  ],
+  "commonOther": "//commonapi.fastviewdata.com",
+  "line": [
+    "//line07w.bk6bba-resources.com",
+    "//line08w.bk6bba-resources.com",
+    "//line31w.bk6bba-resources.com",
+    "//line54w.bk6bba-resources.com"
+  ],
+  "line.mobile": [
+    "//line07w.bk6bba-resources.com",
+    "//line31w.bk6bba-resources.com"
+  ],
+  "line.desktop-ma-lja": [
+    "//line04w.bk6bba-resources.com",
+    "//line10w.bk6bba-resources.com"
+  ],
+  "line.android": [
+    "//line01a.bk6bba-resources.com",
+    "//line51a.bk6bba-resources.com"
+  ],
+  "line.ios": [
+    "//line01i.bk6bba-resources.com",
+    "//line51i.bk6bba-resources.com"
+  ],
+  "line.desktop": [
+    "//line04w.bk6bba-resources.com",
+    "//line06w.bk6bba-resources.com",
+    "//line32w.bk6bba-resources.com",
+    "//line51w.bk6bba-resources.com",
+    "//line52w.bk6bba-resources.com",
+    "//line53w.bk6bba-resources.com",
+    "//line55w.bk6bba-resources.com",
+    "//line01w.bk6bba-resources.com",
+    "//line02w.bk6bba-resources.com"
+  ],
+  "line.landings": [
+    "//line08w.bk6bba-resources.com"
+  ],
+
+  "static": "//origin.bk6bba-resources.com",
+  "origin": "//origin.bk6bba-resources.com",
+
+  "shop": "//clientsapi04w.bk6bba-resources.com/",
+  "statistic": "//clientsapi04w.bk6bba-resources.com/stats/ajax.php",
+  "enableClickStream": true,
+  "defaultBetRoundAccuracy": 1,
+  "useSport": true,
+  "useBets": false,
+  "useNewRequests": true,
+  "enableClientSupportInLoyaltyLandings": true,
+  "showDisclaimerInLoyaltyLandings": true,
+  "useColorSettings": true,
+  "ecupis": true,
+  "defaultScopeMarket": 1600,
+  "hasAppsContent": true,
+  "totoBlocked": true,
+  "eventViewStatisticEnabled": true,
+  "fonbetStatisticEnabled": true
+}
